@@ -1,0 +1,664 @@
+[
+  {
+    "tenantId": "org_1791303114165_5baje",
+    "processId": null,
+    "userId": "use_1791303114410_znzbv",
+    "userName": "Luciano Admin Alfa",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Escritório Alfa Contábil",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-06T16:11:54.414Z",
+    "id": "aud_1791303114414_wuqvj",
+    "createdAt": "2026-10-06T16:11:54.414Z",
+    "updatedAt": "2026-10-06T16:11:54.414Z"
+  },
+  {
+    "tenantId": "org_1791303114650_vcerl",
+    "processId": null,
+    "userId": "use_1791303114845_vvb5m",
+    "userName": "Beatriz Admin Beta",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Imobiliária Beta Prime",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-06T16:11:54.847Z",
+    "id": "aud_1791303114848_a96l1",
+    "createdAt": "2026-10-06T16:11:54.848Z",
+    "updatedAt": "2026-10-06T16:11:54.848Z"
+  },
+  {
+    "tenantId": "org_1791303114165_5baje",
+    "processId": null,
+    "userId": "use_1791303114410_znzbv",
+    "userName": "Luciano Admin Alfa",
+    "action": "CHECKLIST_CRIADO",
+    "details": {
+      "checklistId": "che_1791303114884_dgy8j",
+      "nome": "Homologação Exclusiva Alfa",
+      "totalItens": 2
+    },
+    "timestamp": "2026-10-06T16:11:54.887Z",
+    "id": "aud_1791303114887_8cfa3",
+    "createdAt": "2026-10-06T16:11:54.887Z",
+    "updatedAt": "2026-10-06T16:11:54.887Z"
+  },
+  {
+    "tenantId": "org_1791303114165_5baje",
+    "processId": "pro_1791303114915_ev5i4",
+    "userId": "use_1791303114410_znzbv",
+    "userName": "Luciano Admin Alfa",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Admissão João Silva - Desenvolvedor",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-06T16:11:54.924Z",
+    "id": "aud_1791303114924_w9zi6",
+    "createdAt": "2026-10-06T16:11:54.924Z",
+    "updatedAt": "2026-10-06T16:11:54.924Z"
+  },
+  {
+    "tenantId": "org_1791303114165_5baje",
+    "processId": "pro_1791303114915_ev5i4",
+    "userId": "use_1791303114410_znzbv",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791303115033_flh1f",
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "tamanho": 60,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-06T16:11:55.039Z",
+    "id": "aud_1791303115039_vp6eq",
+    "createdAt": "2026-10-06T16:11:55.039Z",
+    "updatedAt": "2026-10-06T16:11:55.039Z"
+  },
+  {
+    "tenantId": "org_1791303114165_5baje",
+    "processId": null,
+    "userId": "use_1791303114410_znzbv",
+    "userName": "Luciano Admin Alfa",
+    "action": "USUARIO_ALTERADO",
+    "details": {
+      "acao": "CRIADO",
+      "novoUsuarioId": "use_1791303115491_l08g1",
+      "nome": "Marcos Membro Operacional",
+      "papel": "MEMBRO"
+    },
+    "timestamp": "2026-10-06T16:11:55.497Z",
+    "id": "aud_1791303115497_govz1",
+    "createdAt": "2026-10-06T16:11:55.497Z",
+    "updatedAt": "2026-10-06T16:11:55.497Z"
+  },
+  {
+    "tenantId": "org_1791303114165_5baje",
+    "processId": "pro_1791303114915_ev5i4",
+    "userId": "use_1791303114410_znzbv",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_EXCLUIDO",
+    "details": {
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "itemId": "item_p_1791303114914_0"
+    },
+    "timestamp": "2026-10-06T16:11:55.748Z",
+    "id": "aud_1791303115748_jvzww",
+    "createdAt": "2026-10-06T16:11:55.748Z",
+    "updatedAt": "2026-10-06T16:11:55.748Z"
+  },
+  {
+    "tenantId": "org_1791329152608_q6o3h",
+    "processId": null,
+    "userId": "use_1791329152824_vtqba",
+    "userName": "Luciano Admin Alfa",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Escritório Alfa Contábil",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-06T23:25:52.829Z",
+    "id": "aud_1791329152829_56m2e",
+    "createdAt": "2026-10-06T23:25:52.829Z",
+    "updatedAt": "2026-10-06T23:25:52.829Z"
+  },
+  {
+    "tenantId": "org_1791329153076_ne6ds",
+    "processId": null,
+    "userId": "use_1791329153268_axyfy",
+    "userName": "Beatriz Admin Beta",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Imobiliária Beta Prime",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-06T23:25:53.273Z",
+    "id": "aud_1791329153273_s6mda",
+    "createdAt": "2026-10-06T23:25:53.273Z",
+    "updatedAt": "2026-10-06T23:25:53.273Z"
+  },
+  {
+    "tenantId": "org_1791329152608_q6o3h",
+    "processId": null,
+    "userId": "use_1791329152824_vtqba",
+    "userName": "Luciano Admin Alfa",
+    "action": "CHECKLIST_CRIADO",
+    "details": {
+      "checklistId": "che_1791329153377_b9nq3",
+      "nome": "Homologação Exclusiva Alfa",
+      "totalItens": 2
+    },
+    "timestamp": "2026-10-06T23:25:53.382Z",
+    "id": "aud_1791329153382_do70z",
+    "createdAt": "2026-10-06T23:25:53.382Z",
+    "updatedAt": "2026-10-06T23:25:53.382Z"
+  },
+  {
+    "tenantId": "org_1791329152608_q6o3h",
+    "processId": "pro_1791329153405_koin8",
+    "userId": "use_1791329152824_vtqba",
+    "userName": "Luciano Admin Alfa",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Admissão João Silva - Desenvolvedor",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-06T23:25:53.442Z",
+    "id": "aud_1791329153442_j07sc",
+    "createdAt": "2026-10-06T23:25:53.442Z",
+    "updatedAt": "2026-10-06T23:25:53.442Z"
+  },
+  {
+    "tenantId": "org_1791329152608_q6o3h",
+    "processId": "pro_1791329153405_koin8",
+    "userId": "use_1791329152824_vtqba",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791329153597_cf6ou",
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "tamanho": 60,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-06T23:25:53.608Z",
+    "id": "aud_1791329153608_bxe38",
+    "createdAt": "2026-10-06T23:25:53.608Z",
+    "updatedAt": "2026-10-06T23:25:53.608Z"
+  },
+  {
+    "tenantId": "org_1791329152608_q6o3h",
+    "processId": null,
+    "userId": "use_1791329152824_vtqba",
+    "userName": "Luciano Admin Alfa",
+    "action": "USUARIO_ALTERADO",
+    "details": {
+      "acao": "CRIADO",
+      "novoUsuarioId": "use_1791329153844_zoxkq",
+      "nome": "Marcos Membro Operacional",
+      "papel": "MEMBRO"
+    },
+    "timestamp": "2026-10-06T23:25:53.848Z",
+    "id": "aud_1791329153848_sdq0v",
+    "createdAt": "2026-10-06T23:25:53.848Z",
+    "updatedAt": "2026-10-06T23:25:53.848Z"
+  },
+  {
+    "tenantId": "org_1791329152608_q6o3h",
+    "processId": "pro_1791329153405_koin8",
+    "userId": "use_1791329152824_vtqba",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_EXCLUIDO",
+    "details": {
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "itemId": "item_p_1791329153404_0"
+    },
+    "timestamp": "2026-10-06T23:25:54.082Z",
+    "id": "aud_1791329154082_agois",
+    "createdAt": "2026-10-06T23:25:54.082Z",
+    "updatedAt": "2026-10-06T23:25:54.082Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": null,
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Escritório Alfa Contábil",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-06T23:35:38.689Z",
+    "id": "aud_1791329738689_p0dc7",
+    "createdAt": "2026-10-06T23:35:38.689Z",
+    "updatedAt": "2026-10-06T23:35:38.689Z"
+  },
+  {
+    "tenantId": "org_1791329738894_l4bk4",
+    "processId": null,
+    "userId": "use_1791329739112_280dl",
+    "userName": "Beatriz Admin Beta",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Imobiliária Beta Prime",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-06T23:35:39.115Z",
+    "id": "aud_1791329739116_aijci",
+    "createdAt": "2026-10-06T23:35:39.116Z",
+    "updatedAt": "2026-10-06T23:35:39.116Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": null,
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "CHECKLIST_CRIADO",
+    "details": {
+      "checklistId": "che_1791329739135_0baps",
+      "nome": "Homologação Exclusiva Alfa",
+      "totalItens": 2
+    },
+    "timestamp": "2026-10-06T23:35:39.140Z",
+    "id": "aud_1791329739140_bzjyv",
+    "createdAt": "2026-10-06T23:35:39.140Z",
+    "updatedAt": "2026-10-06T23:35:39.140Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Admissão João Silva - Desenvolvedor",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-06T23:35:39.183Z",
+    "id": "aud_1791329739183_i3e6r",
+    "createdAt": "2026-10-06T23:35:39.183Z",
+    "updatedAt": "2026-10-06T23:35:39.183Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791329739248_tqyvq",
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "tamanho": 60,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-06T23:35:39.260Z",
+    "id": "aud_1791329739260_8fz7o",
+    "createdAt": "2026-10-06T23:35:39.260Z",
+    "updatedAt": "2026-10-06T23:35:39.260Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": null,
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "USUARIO_ALTERADO",
+    "details": {
+      "acao": "CRIADO",
+      "novoUsuarioId": "use_1791329739478_3oysj",
+      "nome": "Marcos Membro Operacional",
+      "papel": "MEMBRO"
+    },
+    "timestamp": "2026-10-06T23:35:39.482Z",
+    "id": "aud_1791329739482_7mkk4",
+    "createdAt": "2026-10-06T23:35:39.482Z",
+    "updatedAt": "2026-10-06T23:35:39.482Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_EXCLUIDO",
+    "details": {
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "itemId": "item_p_1791329739169_0"
+    },
+    "timestamp": "2026-10-06T23:35:39.721Z",
+    "id": "aud_1791329739721_6euf3",
+    "createdAt": "2026-10-06T23:35:39.721Z",
+    "updatedAt": "2026-10-06T23:35:39.721Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791329739819_ef0mm",
+      "nomeArquivo": "documento_rg.pdf",
+      "tamanho": 32,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-06T23:35:39.830Z",
+    "id": "aud_1791329739830_l2lze",
+    "createdAt": "2026-10-06T23:35:39.830Z",
+    "updatedAt": "2026-10-06T23:35:39.830Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_STARTED",
+    "details": {
+      "jobId": "job_f30aea83-d5cb-4af6-a0c8-509f38a2214f",
+      "version": 1
+    },
+    "timestamp": "2026-10-06T23:35:39.847Z",
+    "id": "aud_1791329739847_29okm",
+    "createdAt": "2026-10-06T23:35:39.847Z",
+    "updatedAt": "2026-10-06T23:35:39.847Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "OCR_STARTED",
+    "details": {
+      "documentId": "doc_1791329739819_ef0mm",
+      "fileName": "documento_rg.pdf",
+      "provider": "MockOCRProvider"
+    },
+    "timestamp": "2026-10-06T23:35:39.869Z",
+    "id": "aud_1791329739869_nm6qr",
+    "createdAt": "2026-10-06T23:35:39.869Z",
+    "updatedAt": "2026-10-06T23:35:39.869Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "OCR_COMPLETED",
+    "details": {
+      "documentId": "doc_1791329739819_ef0mm",
+      "textLength": 166,
+      "confidence": 0.98
+    },
+    "timestamp": "2026-10-06T23:35:39.889Z",
+    "id": "aud_1791329739889_jhf8x",
+    "createdAt": "2026-10-06T23:35:39.889Z",
+    "updatedAt": "2026-10-06T23:35:39.889Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "FINDING_CREATED",
+    "details": {
+      "code": "REQUIRED_DOCUMENTS_MISSING",
+      "severity": "HIGH",
+      "title": "Documentos obrigatórios ausentes"
+    },
+    "timestamp": "2026-10-06T23:35:39.948Z",
+    "id": "aud_1791329739948_3vai6",
+    "createdAt": "2026-10-06T23:35:39.948Z",
+    "updatedAt": "2026-10-06T23:35:39.948Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_COMPLETED",
+    "details": {
+      "jobId": "job_f30aea83-d5cb-4af6-a0c8-509f38a2214f",
+      "score": 70,
+      "status": "POSSÍVEL PROBLEMA"
+    },
+    "timestamp": "2026-10-06T23:35:40.049Z",
+    "id": "aud_1791329740049_cyepk",
+    "createdAt": "2026-10-06T23:35:40.049Z",
+    "updatedAt": "2026-10-06T23:35:40.049Z"
+  },
+  {
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "userId": "use_1791329738685_9q5vi",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_VIEWED",
+    "details": {
+      "jobId": "job_f30aea83-d5cb-4af6-a0c8-509f38a2214f",
+      "version": 1
+    },
+    "timestamp": "2026-10-06T23:35:40.265Z",
+    "id": "aud_1791329740265_5kvct",
+    "createdAt": "2026-10-06T23:35:40.265Z",
+    "updatedAt": "2026-10-06T23:35:40.265Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": null,
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Escritório Alfa Contábil",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-06T23:39:17.683Z",
+    "id": "aud_1791329957683_g2xco",
+    "createdAt": "2026-10-06T23:39:17.683Z",
+    "updatedAt": "2026-10-06T23:39:17.683Z"
+  },
+  {
+    "tenantId": "org_1791329957891_79coy",
+    "processId": null,
+    "userId": "use_1791329958081_2m3f5",
+    "userName": "Beatriz Admin Beta",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Imobiliária Beta Prime",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-06T23:39:18.086Z",
+    "id": "aud_1791329958086_2iv2u",
+    "createdAt": "2026-10-06T23:39:18.086Z",
+    "updatedAt": "2026-10-06T23:39:18.086Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": null,
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "CHECKLIST_CRIADO",
+    "details": {
+      "checklistId": "che_1791329958108_3ujfe",
+      "nome": "Homologação Exclusiva Alfa",
+      "totalItens": 2
+    },
+    "timestamp": "2026-10-06T23:39:18.113Z",
+    "id": "aud_1791329958113_gzi34",
+    "createdAt": "2026-10-06T23:39:18.113Z",
+    "updatedAt": "2026-10-06T23:39:18.113Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Admissão João Silva - Desenvolvedor",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-06T23:39:18.160Z",
+    "id": "aud_1791329958160_yv0ws",
+    "createdAt": "2026-10-06T23:39:18.160Z",
+    "updatedAt": "2026-10-06T23:39:18.160Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791329958215_7op01",
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "tamanho": 60,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-06T23:39:18.228Z",
+    "id": "aud_1791329958228_n436f",
+    "createdAt": "2026-10-06T23:39:18.228Z",
+    "updatedAt": "2026-10-06T23:39:18.228Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": null,
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "USUARIO_ALTERADO",
+    "details": {
+      "acao": "CRIADO",
+      "novoUsuarioId": "use_1791329958488_zyadm",
+      "nome": "Marcos Membro Operacional",
+      "papel": "MEMBRO"
+    },
+    "timestamp": "2026-10-06T23:39:18.493Z",
+    "id": "aud_1791329958493_diqj2",
+    "createdAt": "2026-10-06T23:39:18.493Z",
+    "updatedAt": "2026-10-06T23:39:18.493Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_EXCLUIDO",
+    "details": {
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "itemId": "item_p_1791329958145_0"
+    },
+    "timestamp": "2026-10-06T23:39:18.725Z",
+    "id": "aud_1791329958725_8x108",
+    "createdAt": "2026-10-06T23:39:18.725Z",
+    "updatedAt": "2026-10-06T23:39:18.725Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791329958773_wmo3d",
+      "nomeArquivo": "documento_rg.pdf",
+      "tamanho": 32,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-06T23:39:18.783Z",
+    "id": "aud_1791329958783_dmmgb",
+    "createdAt": "2026-10-06T23:39:18.783Z",
+    "updatedAt": "2026-10-06T23:39:18.783Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_STARTED",
+    "details": {
+      "jobId": "job_2d705006-041b-469f-805a-802f64a9161a",
+      "version": 1
+    },
+    "timestamp": "2026-10-06T23:39:18.799Z",
+    "id": "aud_1791329958799_8gvi6",
+    "createdAt": "2026-10-06T23:39:18.799Z",
+    "updatedAt": "2026-10-06T23:39:18.799Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "OCR_STARTED",
+    "details": {
+      "documentId": "doc_1791329958773_wmo3d",
+      "fileName": "documento_rg.pdf",
+      "provider": "MockOCRProvider"
+    },
+    "timestamp": "2026-10-06T23:39:18.813Z",
+    "id": "aud_1791329958813_5hlka",
+    "createdAt": "2026-10-06T23:39:18.813Z",
+    "updatedAt": "2026-10-06T23:39:18.813Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "OCR_COMPLETED",
+    "details": {
+      "documentId": "doc_1791329958773_wmo3d",
+      "textLength": 166,
+      "confidence": 0.98
+    },
+    "timestamp": "2026-10-06T23:39:18.824Z",
+    "id": "aud_1791329958824_z0u2b",
+    "createdAt": "2026-10-06T23:39:18.824Z",
+    "updatedAt": "2026-10-06T23:39:18.824Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "FINDING_CREATED",
+    "details": {
+      "code": "REQUIRED_DOCUMENTS_MISSING",
+      "severity": "HIGH",
+      "title": "Documentos obrigatórios ausentes"
+    },
+    "timestamp": "2026-10-06T23:39:18.882Z",
+    "id": "aud_1791329958882_gu8h9",
+    "createdAt": "2026-10-06T23:39:18.882Z",
+    "updatedAt": "2026-10-06T23:39:18.882Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_COMPLETED",
+    "details": {
+      "jobId": "job_2d705006-041b-469f-805a-802f64a9161a",
+      "score": 70,
+      "status": "POSSÍVEL PROBLEMA"
+    },
+    "timestamp": "2026-10-06T23:39:18.909Z",
+    "id": "aud_1791329958909_ohsco",
+    "createdAt": "2026-10-06T23:39:18.909Z",
+    "updatedAt": "2026-10-06T23:39:18.909Z"
+  },
+  {
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "userId": "use_1791329957679_qnehi",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_VIEWED",
+    "details": {
+      "jobId": "job_2d705006-041b-469f-805a-802f64a9161a",
+      "version": 1
+    },
+    "timestamp": "2026-10-06T23:39:19.128Z",
+    "id": "aud_1791329959128_f58qe",
+    "createdAt": "2026-10-06T23:39:19.128Z",
+    "updatedAt": "2026-10-06T23:39:19.128Z"
+  }
+]

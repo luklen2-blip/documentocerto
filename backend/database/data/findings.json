@@ -1,0 +1,30 @@
+[
+  {
+    "id": "fnd_e44d3ddd-b014-4bd6-b22a-23dc167ef1fe",
+    "severity": "HIGH",
+    "code": "REQUIRED_DOCUMENTS_MISSING",
+    "title": "Documentos obrigatórios ausentes",
+    "message": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+    "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+    "evidence": [],
+    "tenantId": "org_1791329738487_6wqzf",
+    "processId": "pro_1791329739170_djzoa",
+    "jobId": "job_f30aea83-d5cb-4af6-a0c8-509f38a2214f",
+    "createdAt": "2026-10-06T23:35:39.941Z",
+    "updatedAt": "2026-10-06T23:35:39.941Z"
+  },
+  {
+    "id": "fnd_a2953b24-7349-4eb5-990c-61922f34e15a",
+    "severity": "HIGH",
+    "code": "REQUIRED_DOCUMENTS_MISSING",
+    "title": "Documentos obrigatórios ausentes",
+    "message": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+    "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+    "evidence": [],
+    "tenantId": "org_1791329957418_ptir7",
+    "processId": "pro_1791329958146_29t2t",
+    "jobId": "job_2d705006-041b-469f-805a-802f64a9161a",
+    "createdAt": "2026-10-06T23:39:18.877Z",
+    "updatedAt": "2026-10-06T23:39:18.877Z"
+  }
+]

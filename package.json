@@ -1,0 +1,27 @@
+{
+  "name": "documentocerto",
+  "version": "2.0.0",
+  "description": "SaaS profissional de conferência e organização documental - Antes de enviar, descubra se está tudo certo.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node tests/run_all.js"
+  },
+  "keywords": [
+    "saas",
+    "documentos",
+    "conferencia",
+    "checklist",
+    "compliance",
+    "multitenant"
+  ],
+  "author": "DocumentoCerto Team",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}
