@@ -39,13 +39,20 @@ export class AuthController {
         });
       }
 
-      // 1. Cria a Organização (Tenant)
+      // 1. Cria a Organização (Tenant) com 1 dia de período de teste completo
+      const now = new Date();
+      const trialEndsAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
+
       const organization = organizationsDb.insert({
         nome: nomeEmpresa.trim(),
         cpfCnpj: (cpfCnpj || '').trim(),
         plano: 'GRATIS',
         ativo: true,
-        limiteProcessosMes: 5,
+        trialAtivo: true,
+        trialDias: 1,
+        trialIniciadoEm: now.toISOString(),
+        trialExpiraEm: trialEndsAt,
+        limiteProcessosMes: 20, // Processos liberados durante o período de teste
         processosCriadosMes: 0
       });
 

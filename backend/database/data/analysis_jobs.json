@@ -274,5 +274,281 @@
     "createdByName": "Luciano Admin Alfa",
     "createdAt": "2026-10-06T23:39:18.795Z",
     "updatedAt": "2026-10-06T23:39:18.904Z"
+  },
+  {
+    "id": "job_aeacbf67-14ee-4046-9120-c7ffc7b5255b",
+    "tenantId": "org_1791334124175_a872z",
+    "processId": "pro_1791334124528_7toyz",
+    "version": 1,
+    "status": "COMPLETED",
+    "progress": 100,
+    "stage": "Análise concluída com sucesso.",
+    "error": null,
+    "result": {
+      "jobId": "job_aeacbf67-14ee-4046-9120-c7ffc7b5255b",
+      "status": "POSSÍVEL PROBLEMA",
+      "score": 70,
+      "scoreMax": 100,
+      "deductions": [
+        {
+          "factor": "Documentos obrigatórios ausentes no processo",
+          "points": 30
+        }
+      ],
+      "findings": [
+        {
+          "id": "fnd_b3c1aa27-9230-42ff-a2ad-50ef298283cd",
+          "severity": "HIGH",
+          "code": "REQUIRED_DOCUMENTS_MISSING",
+          "title": "Documentos obrigatórios ausentes",
+          "message": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+          "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+          "evidence": []
+        }
+      ],
+      "aiSummary": "Atenção: Foram identificados 1 ponto(s) crítico(s) de possível inconsistência (como divergências entre documentos ou dados inválidos) que requerem correção antes do envio.",
+      "aiFindings": [
+        {
+          "code": "REQUIRED_DOCUMENTS_MISSING",
+          "severity": "HIGH",
+          "title": "Documentos obrigatórios ausentes",
+          "explanation": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+          "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+          "document_name": null,
+          "evidence_ids": []
+        }
+      ],
+      "analyzedDocuments": [
+        {
+          "documentId": "doc_1791334125030_yphs6",
+          "documentName": "documento_rg.pdf",
+          "confidence": 0.98,
+          "textSnippet": "REPÚBLICA FEDERATIVA DO BRASIL\nREGISTRO GERAL\nNOME: JOAO DA SILVA\nCPF: 123.456.789-09\nDATA DE NASCIMENTO: 15/04/1985\nDATA DE EMISSÃO: 10/01/2020\nÓRGÃO"
+        }
+      ],
+      "extractedFields": [
+        {
+          "id": "fld_91eebcc6-f0b2-47b9-9d2d-e2be1093c8b9",
+          "document_id": "doc_1791334125030_yphs6",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "cpf",
+          "value": "123.456.789-09",
+          "normalized_value": "12345678909",
+          "confidence": 0.98,
+          "source": "MOCK_OCR",
+          "snippet": "REGISTRO GERAL NOME: JOAO DA SILVA CPF: 123.456.789-09 DATA DE NASCIMENTO: 15/04/1985 DATA DE",
+          "validation": {
+            "isValid": true,
+            "status": "VALIDO",
+            "label": "CPF válido"
+          }
+        },
+        {
+          "id": "fld_641e4ba8-9b17-49de-8aab-aa75efacfddf",
+          "document_id": "doc_1791334125030_yphs6",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "nome_completo",
+          "value": "JOAO DA SILVA",
+          "normalized_value": "JOAO DA SILVA",
+          "confidence": 0.94,
+          "source": "MOCK_OCR",
+          "snippet": "ICA FEDERATIVA DO BRASIL REGISTRO GERAL NOME: JOAO DA SILVA CPF: 123.456.789-09 DATA DE NASCIMENTO: 15/"
+        },
+        {
+          "id": "fld_e0965ec3-e7ce-4632-9864-df1c5d5a971e",
+          "document_id": "doc_1791334125030_yphs6",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "data_nascimento",
+          "value": "15/04/1985",
+          "normalized_value": "1985-04-15",
+          "confidence": 0.95,
+          "source": "MOCK_OCR",
+          "snippet": "NOME: JOAO DA SILVA CPF: 123.456.789-09 DATA DE NASCIMENTO: 15/04/1985 DATA DE EMISSÃO: 10/01/2020 ÓRGÃO EMISS"
+        },
+        {
+          "id": "fld_a032002c-c500-4dab-b7e3-c747bafd404d",
+          "document_id": "doc_1791334125030_yphs6",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "data_emissao",
+          "value": "10/01/2020",
+          "normalized_value": "2020-01-10",
+          "confidence": 0.95,
+          "source": "MOCK_OCR",
+          "snippet": "6.789-09 DATA DE NASCIMENTO: 15/04/1985 DATA DE EMISSÃO: 10/01/2020 ÓRGÃO EMISSOR: SSP/SP"
+        },
+        {
+          "id": "fld_16f15f47-9288-4a2b-b2fd-dd8c679231e0",
+          "document_id": "doc_1791334125030_yphs6",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "orgao_emissor",
+          "value": "SSP/SP",
+          "normalized_value": "SSP/SP",
+          "confidence": 0.92,
+          "source": "MOCK_OCR",
+          "snippet": "A DE EMISSÃO: 10/01/2020 ÓRGÃO EMISSOR: SSP/SP"
+        },
+        {
+          "id": "fld_cd39986a-6bdc-49a8-9d7f-54182a644e3a",
+          "document_id": "doc_1791334125030_yphs6",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "tipo_documento",
+          "value": "RG",
+          "normalized_value": "RG",
+          "confidence": 0.9,
+          "source": "MOCK_OCR",
+          "snippet": "Identificado contexto de documento: RG"
+        }
+      ],
+      "disclaimer": "O DocumentoCerto auxilia na conferência prévia dos documentos. A análise automática é estritamente orientativa e não substitui a validação profissional, jurídica ou administrativa.",
+      "completedAt": "2026-10-07T00:48:45.099Z"
+    },
+    "createdBy": "use_1791334124311_jf5bt",
+    "createdByName": "Luciano Admin Alfa",
+    "createdAt": "2026-10-07T00:48:45.043Z",
+    "updatedAt": "2026-10-07T00:48:45.099Z"
+  },
+  {
+    "id": "job_81c84c6b-a761-4a5e-8c4b-4e723f49f8cf",
+    "tenantId": "org_1791334169486_9g75p",
+    "processId": "pro_1791334169769_8fyxt",
+    "version": 1,
+    "status": "COMPLETED",
+    "progress": 100,
+    "stage": "Análise concluída com sucesso.",
+    "error": null,
+    "result": {
+      "jobId": "job_81c84c6b-a761-4a5e-8c4b-4e723f49f8cf",
+      "status": "POSSÍVEL PROBLEMA",
+      "score": 70,
+      "scoreMax": 100,
+      "deductions": [
+        {
+          "factor": "Documentos obrigatórios ausentes no processo",
+          "points": 30
+        }
+      ],
+      "findings": [
+        {
+          "id": "fnd_858db55e-5c4f-4fe6-a2e1-05d1a56fb43b",
+          "severity": "HIGH",
+          "code": "REQUIRED_DOCUMENTS_MISSING",
+          "title": "Documentos obrigatórios ausentes",
+          "message": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+          "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+          "evidence": []
+        }
+      ],
+      "aiSummary": "Atenção: Foram identificados 1 ponto(s) crítico(s) de possível inconsistência (como divergências entre documentos ou dados inválidos) que requerem correção antes do envio.",
+      "aiFindings": [
+        {
+          "code": "REQUIRED_DOCUMENTS_MISSING",
+          "severity": "HIGH",
+          "title": "Documentos obrigatórios ausentes",
+          "explanation": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+          "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+          "document_name": null,
+          "evidence_ids": []
+        }
+      ],
+      "analyzedDocuments": [
+        {
+          "documentId": "doc_1791334170114_jfnfn",
+          "documentName": "documento_rg.pdf",
+          "confidence": 0.98,
+          "textSnippet": "REPÚBLICA FEDERATIVA DO BRASIL\nREGISTRO GERAL\nNOME: JOAO DA SILVA\nCPF: 123.456.789-09\nDATA DE NASCIMENTO: 15/04/1985\nDATA DE EMISSÃO: 10/01/2020\nÓRGÃO"
+        }
+      ],
+      "extractedFields": [
+        {
+          "id": "fld_c0341e12-3e35-4927-9d6a-0823e4da1ca9",
+          "document_id": "doc_1791334170114_jfnfn",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "cpf",
+          "value": "123.456.789-09",
+          "normalized_value": "12345678909",
+          "confidence": 0.98,
+          "source": "MOCK_OCR",
+          "snippet": "REGISTRO GERAL NOME: JOAO DA SILVA CPF: 123.456.789-09 DATA DE NASCIMENTO: 15/04/1985 DATA DE",
+          "validation": {
+            "isValid": true,
+            "status": "VALIDO",
+            "label": "CPF válido"
+          }
+        },
+        {
+          "id": "fld_7b587cfd-3ecc-4fb1-8088-48e7a44d5a7c",
+          "document_id": "doc_1791334170114_jfnfn",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "nome_completo",
+          "value": "JOAO DA SILVA",
+          "normalized_value": "JOAO DA SILVA",
+          "confidence": 0.94,
+          "source": "MOCK_OCR",
+          "snippet": "ICA FEDERATIVA DO BRASIL REGISTRO GERAL NOME: JOAO DA SILVA CPF: 123.456.789-09 DATA DE NASCIMENTO: 15/"
+        },
+        {
+          "id": "fld_431b9f75-6ac5-4cb7-a406-19711ae98094",
+          "document_id": "doc_1791334170114_jfnfn",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "data_nascimento",
+          "value": "15/04/1985",
+          "normalized_value": "1985-04-15",
+          "confidence": 0.95,
+          "source": "MOCK_OCR",
+          "snippet": "NOME: JOAO DA SILVA CPF: 123.456.789-09 DATA DE NASCIMENTO: 15/04/1985 DATA DE EMISSÃO: 10/01/2020 ÓRGÃO EMISS"
+        },
+        {
+          "id": "fld_b61d6dea-182d-4855-9db5-f1d1036c69db",
+          "document_id": "doc_1791334170114_jfnfn",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "data_emissao",
+          "value": "10/01/2020",
+          "normalized_value": "2020-01-10",
+          "confidence": 0.95,
+          "source": "MOCK_OCR",
+          "snippet": "6.789-09 DATA DE NASCIMENTO: 15/04/1985 DATA DE EMISSÃO: 10/01/2020 ÓRGÃO EMISSOR: SSP/SP"
+        },
+        {
+          "id": "fld_60eb900a-8cad-4384-a68d-ee416dbaed0a",
+          "document_id": "doc_1791334170114_jfnfn",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "orgao_emissor",
+          "value": "SSP/SP",
+          "normalized_value": "SSP/SP",
+          "confidence": 0.92,
+          "source": "MOCK_OCR",
+          "snippet": "A DE EMISSÃO: 10/01/2020 ÓRGÃO EMISSOR: SSP/SP"
+        },
+        {
+          "id": "fld_3ee650a5-dd7b-430a-8931-4374dab0414b",
+          "document_id": "doc_1791334170114_jfnfn",
+          "document_name": "documento_rg.pdf",
+          "page": 1,
+          "field": "tipo_documento",
+          "value": "RG",
+          "normalized_value": "RG",
+          "confidence": 0.9,
+          "source": "MOCK_OCR",
+          "snippet": "Identificado contexto de documento: RG"
+        }
+      ],
+      "disclaimer": "O DocumentoCerto auxilia na conferência prévia dos documentos. A análise automática é estritamente orientativa e não substitui a validação profissional, jurídica ou administrativa.",
+      "completedAt": "2026-10-07T00:49:30.180Z"
+    },
+    "createdBy": "use_1791334169562_e0vpc",
+    "createdByName": "Luciano Admin Alfa",
+    "createdAt": "2026-10-07T00:49:30.125Z",
+    "updatedAt": "2026-10-07T00:49:30.181Z"
   }
 ]

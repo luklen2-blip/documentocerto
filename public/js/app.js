@@ -134,6 +134,22 @@ class DocumentoCertoApp {
       const tabAudit = document.getElementById('tab-audit');
       if (tabMembers) tabMembers.style.display = isAdm ? 'flex' : 'none';
       if (tabAudit) tabAudit.style.display = isAdm ? 'flex' : 'none';
+
+      // Atualiza banner de período de teste de 1 dia
+      const trialBanner = document.getElementById('trial-banner');
+      const trialText = document.getElementById('trial-banner-text');
+      if (trialBanner && this.organization) {
+        if (this.organization.plano === 'VITALICIO') {
+          trialBanner.style.display = 'none';
+        } else if (this.organization.trialAtivo && this.organization.trialExpiraEm) {
+          trialBanner.style.display = 'flex';
+          const msRestantes = new Date(this.organization.trialExpiraEm) - new Date();
+          const horasRestantes = Math.max(0, Math.ceil(msRestantes / (1000 * 60 * 60)));
+          if (trialText) {
+            trialText.textContent = `Você tem ${horasRestantes} horas de período de teste com acesso total liberado. Aproveite!`;
+          }
+        }
+      }
     } else {
       navGuest.classList.remove('hidden');
       navAuth.classList.add('hidden');
@@ -903,26 +919,42 @@ class DocumentoCertoApp {
       container.innerHTML = '';
 
       data.data.forEach(p => {
+        const isVitalicio = p.id === 'vitalicio';
         const card = document.createElement('div');
-        card.className = `rounded-2xl p-6 border flex flex-col justify-between ${p.destaque ? 'bg-white border-emerald-500 shadow-xl shadow-emerald-100 relative' : 'bg-white border-slate-200 shadow-xs'}`;
+        card.className = `rounded-2xl p-6 border flex flex-col justify-between ${
+          p.destaque ? 'bg-white border-emerald-500 shadow-xl shadow-emerald-100 ring-2 ring-emerald-500/20 relative' : 'bg-white border-slate-200 shadow-xs'
+        }`;
 
         card.innerHTML = `
           <div>
-            ${p.destaque ? '<span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[10px] uppercase font-bold tracking-wider px-3 py-0.5 rounded-full">Mais Escolhido</span>' : ''}
-            <h3 class="text-lg font-bold text-slate-900">${p.nome}</h3>
+            ${p.destaque ? `<span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[10px] uppercase font-black tracking-wider px-3.5 py-1 rounded-full shadow-sm">${p.badge || 'Mais Escolhido • Vitalício'}</span>` : ''}
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-slate-900">${p.nome}</h3>
+              ${p.trialDias ? `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">${p.trialDias} dia de teste</span>` : ''}
+            </div>
             <p class="text-xs text-slate-500 mt-1">${p.descricao}</p>
             <div class="mt-4">
               <span class="text-3xl font-extrabold text-slate-900">${p.precoFormatado}</span>
+              <span class="text-xs text-slate-400 ml-1 font-medium">${p.tipoCobranca || ''}</span>
             </div>
             <ul class="mt-6 space-y-2.5 text-xs text-slate-600">
               ${p.recursos.map(r => `<li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i> <span>${r}</span></li>`).join('')}
             </ul>
           </div>
 
-          <div class="mt-8">
-            <button onclick="window.app.handleSelectPlan('${p.id}')" class="w-full py-2.5 rounded-xl font-bold text-xs transition ${p.destaque ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-800'}">
-              ${p.cta}
-            </button>
+          <div class="mt-8 space-y-2">
+            ${isVitalicio ? `
+              <a href="${p.kiwifyUrl || 'https://pay.kiwify.com.br/ueLjXAd'}" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl font-bold text-xs transition bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-200 flex items-center justify-center gap-1.5">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> ${p.cta}
+              </a>
+              <button onclick="window.app.openAuthModal('register')" class="w-full py-2 rounded-xl font-bold text-xs transition bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200">
+                Experimentar 1 Dia Grátis
+              </button>
+            ` : `
+              <button onclick="window.app.handleSelectPlan('${p.id}')" class="w-full py-2.5 rounded-xl font-bold text-xs transition ${p.destaque ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-800'}">
+                ${p.cta}
+              </button>
+            `}
           </div>
         `;
 
@@ -947,15 +979,19 @@ class DocumentoCertoApp {
         body: JSON.stringify({ planoId: planId })
       });
       const data = await res.json();
-      if (!data.success) throw new Error(data.error?.message || 'Erro ao gerar PIX.');
+      if (!data.success) throw new Error(data.error?.message || 'Erro ao obter dados do plano.');
 
       const p = data.data.plano;
       const pix = data.data.pix;
+      const kiwifyUrl = data.data.kiwifyUrl || 'https://pay.kiwify.com.br/ueLjXAd';
 
-      document.getElementById('pix-plano-titulo').textContent = `Assinatura Plano ${p.nome}`;
+      document.getElementById('pix-plano-titulo').textContent = `Assinatura ${p.nome}`;
       document.getElementById('pix-plano-valor').textContent = p.precoFormatado;
       document.getElementById('pix-qrcode-img').src = pix.qrCodeUrl;
       document.getElementById('pix-copiacola-input').value = pix.emvCopiaECola;
+
+      const kiwifyLink = document.getElementById('pix-kiwify-link');
+      if (kiwifyLink) kiwifyLink.href = kiwifyUrl;
 
       document.getElementById('modal-pix').classList.remove('hidden');
     } catch (err) {
@@ -967,6 +1003,9 @@ class DocumentoCertoApp {
     const input = document.getElementById('pix-copiacola-input');
     input.select();
     navigator.clipboard.writeText(input.value);
+    this.toast('Código PIX copiado com sucesso!', 'success');
+  }
+
   // ================= FASE 2: ANÁLISE INTELIGENTE & DIAGNÓSTICO =================
   async triggerIntelligentAnalysis(isReanalysis = false) {
     if (!this.currentProcess) return;

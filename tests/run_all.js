@@ -689,6 +689,41 @@ async function runAllTests() {
     assert.strictEqual(jobTryRes.status, 404);
   });
 
+  // TESTE 27: [Kiwify & Trial] Integração do Plano Vitalício e 1 Dia de Teste Grátis
+  await test('27. [Kiwify & Trial] Plano Vitalício (R$ 19,90) e Período de 1 Dia de Teste', async () => {
+    // 27.1 - Rota de checkout Kiwify
+    const kiwifyRes = await request('/api/plans/kiwify');
+    assert.strictEqual(kiwifyRes.status, 200);
+    assert.strictEqual(kiwifyRes.data.data.kiwifyUrl, 'https://pay.kiwify.com.br/ueLjXAd');
+    assert.strictEqual(kiwifyRes.data.data.trialDias, 1);
+    assert.strictEqual(kiwifyRes.data.data.plano, 'Plano Vitalício');
+
+    // 27.2 - PIX quote com Kiwify URL embutida
+    const quoteRes = await request('/api/plans/pix-quote', {
+      method: 'POST',
+      body: { planoId: 'vitalicio' }
+    });
+    assert.strictEqual(quoteRes.status, 200);
+    assert.strictEqual(quoteRes.data.data.kiwifyUrl, 'https://pay.kiwify.com.br/ueLjXAd');
+    assert.strictEqual(quoteRes.data.data.plano.valorMensal, 19.90);
+
+    // 27.3 - Novo Tenant nasce com 1 dia de trial ativo
+    const regRes = await request('/api/auth/register', {
+      method: 'POST',
+      body: {
+        nome: 'Usuario Teste Kiwify',
+        email: `trial.user.${Date.now()}@kiwify.com.br`,
+        senha: 'senhaTrial123@',
+        nomeEmpresa: 'Kiwify Teste Organização',
+        cpfCnpj: '98.765.432/0001-10'
+      }
+    });
+    assert.strictEqual(regRes.status, 201);
+    assert.strictEqual(regRes.data.data.organization.trialAtivo, true);
+    assert.strictEqual(regRes.data.data.organization.trialDias, 1);
+    assert.ok(regRes.data.data.organization.trialExpiraEm);
+  });
+
   // Finalização do servidor de teste
   server.close();
 
