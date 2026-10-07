@@ -8,3 +8,6 @@ scratch/
 dist/
 storage/private/*
 !storage/private/.gitkeep
+ca-bundle.crt
+tunnel_url.txt
+
