@@ -51,6 +51,13 @@ class DocumentoCertoApp {
       const res = await fetch(endpoint, { ...options, headers });
       const data = await res.json();
       if (!res.ok) {
+        if (data.error?.code === 'TRIAL_EXPIRED') {
+          if (this.organization) {
+            this.organization.trialExpirado = true;
+            this.organization.statusComercial = 'TRIAL_EXPIRADO';
+            this.updateNavState();
+          }
+        }
         throw new Error(data.error?.message || data.message || 'Erro ao processar requisição.');
       }
       return data;
@@ -135,18 +142,24 @@ class DocumentoCertoApp {
       if (tabMembers) tabMembers.style.display = isAdm ? 'flex' : 'none';
       if (tabAudit) tabAudit.style.display = isAdm ? 'flex' : 'none';
 
-      // Atualiza banner de período de teste de 1 dia
+      // Atualiza banner de período de teste de 1 dia (controlado exclusivamente pelo backend)
       const trialBanner = document.getElementById('trial-banner');
       const trialText = document.getElementById('trial-banner-text');
       if (trialBanner && this.organization) {
         if (this.organization.plano === 'VITALICIO') {
           trialBanner.style.display = 'none';
-        } else if (this.organization.trialAtivo && this.organization.trialExpiraEm) {
+        } else if (this.organization.trialExpirado) {
           trialBanner.style.display = 'flex';
-          const msRestantes = new Date(this.organization.trialExpiraEm) - new Date();
-          const horasRestantes = Math.max(0, Math.ceil(msRestantes / (1000 * 60 * 60)));
+          trialBanner.className = 'mt-4 p-4 bg-amber-50 border border-amber-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs';
           if (trialText) {
-            trialText.textContent = `Você tem ${horasRestantes} horas de período de teste com acesso total liberado. Aproveite!`;
+            trialText.innerHTML = '<span class="font-bold text-amber-900">Seu período de teste de 24 horas encerrou.</span> Para continuar criando processos, enviando documentos e realizando novas conferências, garanta o seu Plano Vitalício.';
+          }
+        } else if (this.organization.trialAtivo) {
+          trialBanner.style.display = 'flex';
+          trialBanner.className = 'mt-4 p-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs';
+          const horas = this.organization.trialHorasRestantes ?? 24;
+          if (trialText) {
+            trialText.textContent = `Você tem ${horas} hora(s) de período de teste com acesso total liberado. Aproveite!`;
           }
         }
       }

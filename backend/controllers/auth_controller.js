@@ -88,7 +88,7 @@ export class AuthController {
         success: true,
         data: {
           user: safeUser,
-          organization,
+          organization: enrichOrganization(organization),
           token
         },
         message: 'Conta e organização criadas com sucesso!'
@@ -151,7 +151,7 @@ export class AuthController {
         success: true,
         data: {
           user: safeUser,
-          organization,
+          organization: enrichOrganization(organization),
           token
         },
         message: 'Login realizado com sucesso.'
@@ -171,8 +171,27 @@ export class AuthController {
       success: true,
       data: {
         user: safeUser,
-        organization: req.organization
+        organization: enrichOrganization(req.organization)
       }
     });
   }
+}
+
+export function enrichOrganization(org) {
+  if (!org) return null;
+  const now = new Date();
+  const isPaid = ['VITALICIO', 'PROFISSIONAL', 'EMPRESA'].includes(org.plano);
+  const isExpired = !isPaid && org.trialExpiraEm && new Date(org.trialExpiraEm) <= now;
+  const msRemaining = isPaid ? null : Math.max(0, new Date(org.trialExpiraEm || now) - now);
+  const hoursRemaining = isPaid ? null : Math.ceil(msRemaining / (1000 * 60 * 60));
+  const minutesRemaining = isPaid ? null : Math.ceil(msRemaining / (1000 * 60));
+
+  return {
+    ...org,
+    statusComercial: isPaid ? 'ATIVO' : (isExpired ? 'TRIAL_EXPIRADO' : 'TRIAL_ATIVO'),
+    trialExpirado: isExpired,
+    trialHorasRestantes: hoursRemaining,
+    trialMinutosRestantes: minutesRemaining,
+    upgradeUrl: 'https://pay.kiwify.com.br/ueLjXAd'
+  };
 }

@@ -724,6 +724,103 @@ async function runAllTests() {
     assert.ok(regRes.data.data.organization.trialExpiraEm);
   });
 
+  // TESTE 28: [Bloqueio Backend & Expiração] Imunidade a manipulação e bloqueio após 24h
+  await test('28. [Bloqueio Backend] Bloqueio estrito de API após término do período de teste', async () => {
+    // 28.1 - Registra novo usuário para teste de expiração
+    const expEmail = `expirado.${Date.now()}@teste.com`;
+    const regRes = await request('/api/auth/register', {
+      method: 'POST',
+      body: {
+        nome: 'Usuario Expiravel',
+        email: expEmail,
+        senha: 'senhaExpiravel123@',
+        nomeEmpresa: 'Empresa Expiravel Ltda',
+        cpfCnpj: '11.222.333/0001-44'
+      }
+    });
+    assert.strictEqual(regRes.status, 201);
+    const expToken = regRes.data.data.token;
+    const expOrgId = regRes.data.data.organization.id;
+
+    // 28.2 - Durante o trial válido: criação de processo é permitida
+    const validProcRes = await request('/api/processes', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${expToken}` },
+      body: {
+        nome: 'Processo no Trial Valido',
+        checklistId: 'chk_admissao_default',
+        tipo: 'Admissão'
+      }
+    });
+    assert.strictEqual(validProcRes.status, 201);
+    const procId = validProcRes.data.data.id;
+
+    // 28.3 - Simula término das 24 horas no banco de dados (expiração)
+    const { organizationsDb } = await import('../backend/database/index.js');
+    organizationsDb.update(expOrgId, {
+      trialExpiraEm: new Date(Date.now() - 60000).toISOString() // Expirou há 1 minuto
+    });
+
+    // 28.4 - Consulta /api/auth/me: Servidor reporta TRIAL_EXPIRADO deterministicamente
+    const meRes = await request('/api/auth/me', {
+      headers: { 'Authorization': `Bearer ${expToken}` }
+    });
+    assert.strictEqual(meRes.status, 200);
+    assert.strictEqual(meRes.data.data.organization.statusComercial, 'TRIAL_EXPIRADO');
+    assert.strictEqual(meRes.data.data.organization.trialExpirado, true);
+
+    // 28.5 - Tentativa de criar processo com trial expirado: BLOQUEADO (HTTP 403 TRIAL_EXPIRED)
+    const blockedProcRes = await request('/api/processes', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${expToken}` },
+      body: {
+        nome: 'Tentativa Burlar Criacao',
+        checklistId: 'chk_admissao_default',
+        tipo: 'Admissão'
+      }
+    });
+    assert.strictEqual(blockedProcRes.status, 403);
+    assert.strictEqual(blockedProcRes.data.error.code, 'TRIAL_EXPIRED');
+
+    // 28.6 - Tentativa de upload com trial expirado: BLOQUEADO (HTTP 403 TRIAL_EXPIRED)
+    const blockedUploadRes = await multipartUpload(
+      '/api/documents/upload',
+      expToken,
+      procId,
+      'item_adm_1',
+      'rg_teste.pdf',
+      '%PDF-1.4 ...',
+      'application/pdf'
+    );
+    assert.strictEqual(blockedUploadRes.status, 403);
+    assert.strictEqual(blockedUploadRes.data.error.code, 'TRIAL_EXPIRED');
+
+    // 28.7 - Tentativa de disparar análise com trial expirado: BLOQUEADO (HTTP 403 TRIAL_EXPIRED)
+    const blockedAnalysisRes = await request(`/api/analysis/process/${procId}/run`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${expToken}` }
+    });
+    assert.strictEqual(blockedAnalysisRes.status, 403);
+    assert.strictEqual(blockedAnalysisRes.data.error.code, 'TRIAL_EXPIRED');
+
+    // 28.8 - Upgrade para Plano VITALICIO: Desbloqueio imediato definitivo
+    organizationsDb.update(expOrgId, {
+      plano: 'VITALICIO',
+      ativo: true
+    });
+
+    const unblockedProcRes = await request('/api/processes', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${expToken}` },
+      body: {
+        nome: 'Processo Apos Ativacao Vitalicia',
+        checklistId: 'chk_admissao_default',
+        tipo: 'Admissão'
+      }
+    });
+    assert.strictEqual(unblockedProcRes.status, 201);
+  });
+
   // Finalização do servidor de teste
   server.close();
 
