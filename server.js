@@ -74,7 +74,20 @@ staticCandidates.forEach(dirPath => {
   }
 });
 
-// 6. Fallback SPA para Rotas de Frontend (Landing page, App, LGPD, Termos)
+// 6. Rotas Oficiais de Conformidade Jurídica e LGPD (Termos e Privacidade)
+app.get('/termos', (req, res) => {
+  const file = path.join(__dirname, 'public', 'termos.html');
+  if (fs.existsSync(file)) return res.sendFile(file);
+  res.redirect('/#termos');
+});
+
+app.get('/privacidade', (req, res) => {
+  const file = path.join(__dirname, 'public', 'privacidade.html');
+  if (fs.existsSync(file)) return res.sendFile(file);
+  res.redirect('/#privacidade');
+});
+
+// 7. Fallback SPA para Rotas de Frontend (Landing page, App, LGPD, Termos)
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({

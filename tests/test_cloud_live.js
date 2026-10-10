@@ -68,6 +68,24 @@ async function runLiveTests() {
   console.log(`✅ OK (${plans.data.data.length} planos comerciais ativos)`);
   passed++;
 
+  // 4. Termos de Uso
+  process.stdout.write('4. Verificando /termos (Conformidade Legal)... ');
+  const terms = await requestUrl('/termos');
+  if (terms.status !== 200 || !terms.raw.includes('Termos de Uso')) {
+    throw new Error(`Termos falhou: HTTP ${terms.status}`);
+  }
+  console.log('✅ OK (Termos de Uso acessível)');
+  passed++;
+
+  // 5. Política de Privacidade & LGPD
+  process.stdout.write('5. Verificando /privacidade (LGPD Art. 14)... ');
+  const priv = await requestUrl('/privacidade');
+  if (priv.status !== 200 || !priv.raw.includes('Privacidade')) {
+    throw new Error(`Privacidade falhou: HTTP ${priv.status}`);
+  }
+  console.log('✅ OK (Política de Privacidade LGPD acessível)');
+  passed++;
+
   console.log(`\n🎉 Todos os ${passed} testes de nuvem passaram! Aplicação 100% íntegra.`);
   process.exit(0);
 }

@@ -821,6 +821,22 @@ async function runAllTests() {
     assert.strictEqual(unblockedProcRes.status, 201);
   });
 
+  // ----------------------------------------------------
+  // TESTE 29: Conformidade Legal LGPD e Termos de Uso (/termos e /privacidade)
+  // ----------------------------------------------------
+  await test('29. [LGPD & Legal] Disponibilidade das rotas /termos e /privacidade...', async () => {
+    const termosRes = await request('/termos');
+    assert.strictEqual(termosRes.status, 200);
+    assert.ok(termosRes.raw.includes('Termos de Uso'));
+    assert.ok(termosRes.raw.includes('DocumentoCerto'));
+
+    const privRes = await request('/privacidade');
+    assert.strictEqual(privRes.status, 200);
+    assert.ok(privRes.raw.includes('Política de Privacidade'));
+    assert.ok(privRes.raw.includes('LGPD'));
+    assert.ok(privRes.raw.includes('Lei 13.709/2018'));
+  });
+
   // Finalização do servidor de teste
   server.close();
 
