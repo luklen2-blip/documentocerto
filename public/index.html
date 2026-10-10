@@ -6,6 +6,12 @@
   <title>DocumentoCerto | Conferência e Organização Documental Pré-Envio</title>
   <meta name="description" content="Antes de enviar, descubra se está tudo certo. SaaS profissional para conferência documental, identificação de documentos faltantes e pendências.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'></path><polyline points='14 2 14 8 20 8'></polyline><path d='m9 15 2 2 4-4'></path></svg>">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#059669">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="DocumentoCerto">
+  <link rel="apple-touch-icon" href="/icons/icon-192.svg">
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -726,10 +732,22 @@
           </a>
         </div>
       </div>
-      <div class="pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+      <div class="pt-6 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-semibold text-slate-300">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Classificação: 16+ anos
+          </span>
+          <span class="text-slate-400">Compras e assinaturas restritas a maiores de 18 anos ou assistidos por responsáveis.</span>
+        </div>
+        <div class="flex gap-4 text-[11px]">
+          <a href="/termos" class="text-slate-400 hover:text-emerald-400 transition">Termos de Uso</a>
+          <a href="/privacidade" class="text-slate-400 hover:text-emerald-400 transition">Privacidade & LGPD</a>
+        </div>
+      </div>
+      <div class="pt-4 flex flex-col md:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
         <p>&copy; 2026 DocumentoCerto. Todos os direitos reservados.</p>
         <p class="max-w-xl text-center md:text-right">
-          Aviso: Os resultados apresentados pelo DocumentoCerto são auxiliares e não substituem análise profissional, jurídica ou administrativa quando necessária.
+          Aviso: Os resultados apresentados pelo DocumentoCerto são de caráter auxiliar tecnológico e não substituem exame profissional, parecer advocatício nem fé pública notarial/cartorária oficial.
         </p>
       </div>
     </div>
@@ -778,7 +796,7 @@
         <div id="auth-lgpd-consent" class="hidden pt-1">
           <label class="flex items-start gap-2 text-[11px] text-slate-600">
             <input type="checkbox" id="auth-input-lgpd" class="mt-0.5 rounded border-slate-300 text-emerald-600">
-            <span>Concordo com os <button type="button" onclick="window.app.openTermsModal()" class="text-emerald-700 underline">Termos de Uso</button> e a <button type="button" onclick="window.app.openPrivacyModal()" class="text-emerald-700 underline">Política de Privacidade</button> (LGPD).</span>
+            <span>Declaro ter 16 anos ou mais e concordo com os <button type="button" onclick="window.app.openTermsModal()" class="text-emerald-700 underline">Termos de Uso</button> e a <button type="button" onclick="window.app.openPrivacyModal()" class="text-emerald-700 underline">Política de Privacidade</button> (LGPD).</span>
           </label>
         </div>
 
@@ -907,5 +925,16 @@
 
   <!-- Aplicação JS -->
   <script src="/js/app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch((err) => {
+          console.debug('[PWA] Service Worker não registrado:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
