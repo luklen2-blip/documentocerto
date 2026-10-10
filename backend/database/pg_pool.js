@@ -125,6 +125,28 @@ export async function checkConnection() {
       // Falha não crítica na listagem
     }
 
+    let dataMigration = null;
+    try {
+      const dmRes = await query('SELECT version, name, records_migrated, applied_at FROM data_migrations WHERE version = 1');
+      if (dmRes.rows.length > 0) {
+        dataMigration = {
+          migrated: true,
+          records: dmRes.rows[0].records_migrated,
+          applied_at: dmRes.rows[0].applied_at
+        };
+      }
+    } catch {}
+
+    let recordCounts = {};
+    try {
+      for (const t of ['organizations', 'users', 'processes', 'checklists', 'documents']) {
+        if (tables.includes(t)) {
+          const cRes = await query(`SELECT count(*)::int AS count FROM ${t}`);
+          recordCounts[t] = cRes.rows[0].count;
+        }
+      }
+    } catch {}
+
     return {
       connected: true,
       configured: true,
@@ -134,6 +156,8 @@ export async function checkConnection() {
       latency_ms,
       total_tables: tables.length,
       tables,
+      data_migration: dataMigration,
+      record_counts: recordCounts,
       last_check: new Date().toISOString(),
       pool: {
         total_connections: pool?.totalCount || 0,

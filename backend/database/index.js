@@ -1,6 +1,8 @@
 import { PgRepository } from './repositories.js';
+import { isPostgresConfigured } from './pg_pool.js';
 export { query, withTransaction, isPostgresConfigured, checkConnection, closePgPool } from './pg_pool.js';
 export { runMigrations } from './migration_runner.js';
+export { migrateJsonDbToPostgres } from './scripts/migrate_jsondb_to_postgres.js';
 
 export const organizationsDb = new PgRepository('organizations');
 export const usersDb = new PgRepository('users');
@@ -83,4 +85,19 @@ export function seedDefaultChecklists() {
     templates.forEach(t => checklistsDb.insert(t));
     console.log('[Checklists] Modelos padrão de sistema inicializados com sucesso.');
   }
+}
+
+export async function syncAllRepositoriesFromPg() {
+  if (!isPostgresConfigured()) return 0;
+  const repos = [
+    organizationsDb, usersDb, checklistsDb, processesDb, documentsDb, auditDb,
+    analysisJobsDb, extractedTextDb, extractedFieldsDb, findingsDb, aiAnalysisDb,
+    kiwifyWebhookEventsDb, kiwifyTransactionsDb
+  ];
+  let total = 0;
+  for (const r of repos) {
+    const count = await r.syncFromPg();
+    total += (count || 0);
+  }
+  return total;
 }

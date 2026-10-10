@@ -35,12 +35,27 @@ export class PgRepository {
     return isPostgresConfigured();
   }
 
+  async syncFromPg() {
+    if (!this.isUsingPg()) return 0;
+    try {
+      const res = await query(`SELECT * FROM ${this.tableName} ORDER BY created_at ASC`);
+      const items = res.rows.map(toCamel);
+      this.jsonDb.setAll(items);
+      return items.length;
+    } catch (err) {
+      console.error(`[PgRepository Sync Error on ${this.tableName}]:`, err.message);
+      if (process.env.NODE_ENV === 'production') {
+        throw err;
+      }
+      return 0;
+    }
+  }
+
   // Busca síncrona ou assíncrona compatível com código existente
   findAll(predicate) {
     if (!this.isUsingPg()) {
       return this.jsonDb.findAll(predicate);
     }
-    // No modo PostgreSQL síncrono em runtime quando chamado por código legado
     return this.jsonDb.findAll(predicate);
   }
 

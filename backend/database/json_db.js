@@ -84,4 +84,9 @@ export class JsonDB {
     this._persist(filtered);
     return initialLen - filtered.length;
   }
+
+  setAll(records) {
+    this._persist([...records]);
+    return this.cache.length;
+  }
 }

@@ -24,7 +24,9 @@ import {
   seedDefaultChecklists,
   checkConnection,
   isPostgresConfigured,
-  runMigrations
+  runMigrations,
+  migrateJsonDbToPostgres,
+  syncAllRepositoriesFromPg
 } from './backend/database/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -138,11 +140,24 @@ if (process.env.NODE_ENV !== 'test') {
     console.warn('================================================================');
   }
 
-  // Executa migrações pendentes se o PostgreSQL estiver configurado
+  // Executa migrações pendentes e migração de dados idempotente
   if (isPostgresConfigured()) {
-    runMigrations().catch(err => {
-      console.error('[Migrations Erro ao Inicializar]:', err.message);
-    });
+    runMigrations()
+      .then(() => migrateJsonDbToPostgres())
+      .then(res => {
+        if (res && res.success) {
+          console.log(`[Data Migration]: ✅ Reconciliados ${res.totalRecordsJson} registros com sucesso no PostgreSQL!`);
+        }
+        return syncAllRepositoriesFromPg();
+      })
+      .then(syncedCount => {
+        if (typeof syncedCount === 'number') {
+          console.log(`[Repository Sync]: ✅ ${syncedCount} registros sincronizados a partir do PostgreSQL.`);
+        }
+      })
+      .catch(err => {
+        console.error('[Migrations Erro ao Inicializar]:', err.message);
+      });
   }
 
   app.listen(PORT, () => {
