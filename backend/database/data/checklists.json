@@ -339,5 +339,59 @@
     "id": "che_1791334169753_stxom",
     "createdAt": "2026-10-07T00:49:29.753Z",
     "updatedAt": "2026-10-07T00:49:29.753Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "isSystemTemplate": false,
+    "nome": "Homologação Exclusiva Alfa",
+    "descricao": "Modelo customizado da organização",
+    "categoria": "Operações",
+    "ativo": true,
+    "itens": [
+      {
+        "id": "item_custom_1791664035471_0",
+        "nome": "Contrato Social Registrado",
+        "tipo": "juridico",
+        "obrigatorio": true,
+        "orientacoes": "Verificar conformidade antes do envio."
+      },
+      {
+        "id": "item_custom_1791664035471_1",
+        "nome": "Alvará de Funcionamento",
+        "tipo": "licenca",
+        "obrigatorio": false,
+        "orientacoes": "Verificar conformidade antes do envio."
+      }
+    ],
+    "id": "che_1791664035471_31a48",
+    "createdAt": "2026-10-10T20:27:15.471Z",
+    "updatedAt": "2026-10-10T20:27:15.471Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "isSystemTemplate": false,
+    "nome": "Homologação Exclusiva Alfa",
+    "descricao": "Modelo customizado da organização",
+    "categoria": "Operações",
+    "ativo": true,
+    "itens": [
+      {
+        "id": "item_custom_1791664527444_0",
+        "nome": "Contrato Social Registrado",
+        "tipo": "juridico",
+        "obrigatorio": true,
+        "orientacoes": "Verificar conformidade antes do envio."
+      },
+      {
+        "id": "item_custom_1791664527444_1",
+        "nome": "Alvará de Funcionamento",
+        "tipo": "licenca",
+        "obrigatorio": false,
+        "orientacoes": "Verificar conformidade antes do envio."
+      }
+    ],
+    "id": "che_1791664527444_xhyi3",
+    "createdAt": "2026-10-10T20:35:27.444Z",
+    "updatedAt": "2026-10-10T20:35:27.444Z"
   }
 ]

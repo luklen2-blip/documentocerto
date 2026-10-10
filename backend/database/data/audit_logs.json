@@ -1117,5 +1117,726 @@
     "id": "aud_1791334170515_xahe2",
     "createdAt": "2026-10-07T00:49:30.515Z",
     "updatedAt": "2026-10-07T00:49:30.515Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": null,
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Escritório Alfa Contábil",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-10T20:27:15.045Z",
+    "id": "aud_1791664035045_5pjek",
+    "createdAt": "2026-10-10T20:27:15.045Z",
+    "updatedAt": "2026-10-10T20:27:15.045Z"
+  },
+  {
+    "tenantId": "org_1791664035268_wixbk",
+    "processId": null,
+    "userId": "use_1791664035448_9rgl7",
+    "userName": "Beatriz Admin Beta",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Imobiliária Beta Prime",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-10T20:27:15.452Z",
+    "id": "aud_1791664035452_ku4wa",
+    "createdAt": "2026-10-10T20:27:15.452Z",
+    "updatedAt": "2026-10-10T20:27:15.452Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": null,
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "CHECKLIST_CRIADO",
+    "details": {
+      "checklistId": "che_1791664035471_31a48",
+      "nome": "Homologação Exclusiva Alfa",
+      "totalItens": 2
+    },
+    "timestamp": "2026-10-10T20:27:15.478Z",
+    "id": "aud_1791664035478_bwj6f",
+    "createdAt": "2026-10-10T20:27:15.478Z",
+    "updatedAt": "2026-10-10T20:27:15.478Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Admissão João Silva - Desenvolvedor",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-10T20:27:15.517Z",
+    "id": "aud_1791664035517_brh1z",
+    "createdAt": "2026-10-10T20:27:15.517Z",
+    "updatedAt": "2026-10-10T20:27:15.517Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791664035570_fs4vi",
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "tamanho": 60,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-10T20:27:15.597Z",
+    "id": "aud_1791664035597_dkhkj",
+    "createdAt": "2026-10-10T20:27:15.597Z",
+    "updatedAt": "2026-10-10T20:27:15.597Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": null,
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "USUARIO_ALTERADO",
+    "details": {
+      "acao": "CRIADO",
+      "novoUsuarioId": "use_1791664035808_qfi42",
+      "nome": "Marcos Membro Operacional",
+      "papel": "MEMBRO"
+    },
+    "timestamp": "2026-10-10T20:27:15.814Z",
+    "id": "aud_1791664035814_4db6k",
+    "createdAt": "2026-10-10T20:27:15.814Z",
+    "updatedAt": "2026-10-10T20:27:15.814Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_EXCLUIDO",
+    "details": {
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "itemId": "item_p_1791664035503_0"
+    },
+    "timestamp": "2026-10-10T20:27:16.056Z",
+    "id": "aud_1791664036056_fbcsq",
+    "createdAt": "2026-10-10T20:27:16.056Z",
+    "updatedAt": "2026-10-10T20:27:16.056Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791664036105_c4rdy",
+      "nomeArquivo": "documento_rg.pdf",
+      "tamanho": 32,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-10T20:27:16.133Z",
+    "id": "aud_1791664036133_vevst",
+    "createdAt": "2026-10-10T20:27:16.133Z",
+    "updatedAt": "2026-10-10T20:27:16.133Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_STARTED",
+    "details": {
+      "jobId": "job_e70064ae-d303-4fa6-99f8-391f10cbce68",
+      "version": 1
+    },
+    "timestamp": "2026-10-10T20:27:16.151Z",
+    "id": "aud_1791664036151_aesr7",
+    "createdAt": "2026-10-10T20:27:16.151Z",
+    "updatedAt": "2026-10-10T20:27:16.151Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "OCR_STARTED",
+    "details": {
+      "documentId": "doc_1791664036105_c4rdy",
+      "fileName": "documento_rg.pdf",
+      "provider": "MockOCRProvider"
+    },
+    "timestamp": "2026-10-10T20:27:16.166Z",
+    "id": "aud_1791664036166_rx2xk",
+    "createdAt": "2026-10-10T20:27:16.166Z",
+    "updatedAt": "2026-10-10T20:27:16.166Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "OCR_COMPLETED",
+    "details": {
+      "documentId": "doc_1791664036105_c4rdy",
+      "textLength": 166,
+      "confidence": 0.98
+    },
+    "timestamp": "2026-10-10T20:27:16.174Z",
+    "id": "aud_1791664036174_88k4b",
+    "createdAt": "2026-10-10T20:27:16.174Z",
+    "updatedAt": "2026-10-10T20:27:16.174Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "FINDING_CREATED",
+    "details": {
+      "code": "REQUIRED_DOCUMENTS_MISSING",
+      "severity": "HIGH",
+      "title": "Documentos obrigatórios ausentes"
+    },
+    "timestamp": "2026-10-10T20:27:16.233Z",
+    "id": "aud_1791664036233_hiwpe",
+    "createdAt": "2026-10-10T20:27:16.233Z",
+    "updatedAt": "2026-10-10T20:27:16.233Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_COMPLETED",
+    "details": {
+      "jobId": "job_e70064ae-d303-4fa6-99f8-391f10cbce68",
+      "score": 70,
+      "status": "POSSÍVEL PROBLEMA"
+    },
+    "timestamp": "2026-10-10T20:27:16.256Z",
+    "id": "aud_1791664036256_5130s",
+    "createdAt": "2026-10-10T20:27:16.256Z",
+    "updatedAt": "2026-10-10T20:27:16.256Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_VIEWED",
+    "details": {
+      "jobId": "job_e70064ae-d303-4fa6-99f8-391f10cbce68",
+      "version": 1
+    },
+    "timestamp": "2026-10-10T20:27:16.483Z",
+    "id": "aud_1791664036483_y5kr7",
+    "createdAt": "2026-10-10T20:27:16.483Z",
+    "updatedAt": "2026-10-10T20:27:16.483Z"
+  },
+  {
+    "tenantId": "org_1791664036521_2k3tz",
+    "processId": null,
+    "userId": "use_1791664036880_8vp0j",
+    "userName": "Usuario Teste Kiwify",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Kiwify Teste Organização",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-10T20:27:16.885Z",
+    "id": "aud_1791664036885_we8o1",
+    "createdAt": "2026-10-10T20:27:16.885Z",
+    "updatedAt": "2026-10-10T20:27:16.885Z"
+  },
+  {
+    "tenantId": "org_1791664036896_uwuba",
+    "processId": null,
+    "userId": "use_1791664037093_abitk",
+    "userName": "Usuario Expiravel",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Empresa Expiravel Ltda",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-10T20:27:17.098Z",
+    "id": "aud_1791664037098_yf5dl",
+    "createdAt": "2026-10-10T20:27:17.098Z",
+    "updatedAt": "2026-10-10T20:27:17.098Z"
+  },
+  {
+    "tenantId": "org_1791664036896_uwuba",
+    "processId": "pro_1791664037105_areo3",
+    "userId": "use_1791664037093_abitk",
+    "userName": "Usuario Expiravel",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Processo no Trial Valido",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-10T20:27:17.115Z",
+    "id": "aud_1791664037116_r8am5",
+    "createdAt": "2026-10-10T20:27:17.116Z",
+    "updatedAt": "2026-10-10T20:27:17.116Z"
+  },
+  {
+    "tenantId": "org_1791664036896_uwuba",
+    "processId": "pro_1791664037149_8bb38",
+    "userId": "use_1791664037093_abitk",
+    "userName": "Usuario Expiravel",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Processo Apos Ativacao Vitalicia",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-10T20:27:17.157Z",
+    "id": "aud_1791664037157_x9wwk",
+    "createdAt": "2026-10-10T20:27:17.157Z",
+    "updatedAt": "2026-10-10T20:27:17.157Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "userId": "use_1791664035038_jsd0o",
+    "userName": "Luciano Admin Alfa",
+    "action": "KIWIFY_ORDER_APPROVED",
+    "details": {
+      "orderId": "kw_runall_1791664037202",
+      "orderRef": null,
+      "plano": "VITALICIO",
+      "valor": 19.9,
+      "paymentMethod": "unknown",
+      "productName": "DocumentoCerto Plano Vitalício"
+    },
+    "timestamp": "2026-10-10T20:27:17.217Z",
+    "id": "aud_1791664037217_4t8eu",
+    "createdAt": "2026-10-10T20:27:17.217Z",
+    "updatedAt": "2026-10-10T20:27:17.217Z"
+  },
+  {
+    "tenantId": "org_1791664035268_wixbk",
+    "userId": "use_1791664035448_9rgl7",
+    "userName": "Beatriz Admin Beta",
+    "action": "PURCHASE_CLAIMED_SUCCESS",
+    "details": {
+      "orderId": "kw_unclaimed_runall_1791664037243",
+      "plano": "VITALICIO"
+    },
+    "timestamp": "2026-10-10T20:27:17.272Z",
+    "id": "aud_1791664037272_kczqv",
+    "createdAt": "2026-10-10T20:27:17.272Z",
+    "updatedAt": "2026-10-10T20:27:17.272Z"
+  },
+  {
+    "tenantId": "org_storage_a_1791664124157",
+    "processId": "pro_test_1791664124181",
+    "userId": "usr_a_1791664124171",
+    "userName": "Admin A",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791664124297_dwe7k",
+      "nomeArquivo": "rg_persistente.pdf",
+      "tamanho": 117,
+      "itemNome": "RG Oficial"
+    },
+    "timestamp": "2026-10-10T20:28:44.323Z",
+    "id": "aud_1791664124323_o04nv",
+    "createdAt": "2026-10-10T20:28:44.323Z",
+    "updatedAt": "2026-10-10T20:28:44.323Z"
+  },
+  {
+    "tenantId": "org_storage_a_1791664124157",
+    "processId": "pro_test_1791664124181",
+    "userId": "usr_a_1791664124171",
+    "userName": "Admin A",
+    "action": "ANALYSIS_STARTED",
+    "details": {
+      "jobId": "job_ee5e9631-1fc5-4fe1-980d-df1333ac3c67",
+      "version": 1
+    },
+    "timestamp": "2026-10-10T20:28:44.370Z",
+    "id": "aud_1791664124370_y87xk",
+    "createdAt": "2026-10-10T20:28:44.370Z",
+    "updatedAt": "2026-10-10T20:28:44.370Z"
+  },
+  {
+    "tenantId": "org_storage_a_1791664124157",
+    "processId": "pro_test_1791664124181",
+    "userId": "usr_a_1791664124171",
+    "userName": "Admin A",
+    "action": "OCR_STARTED",
+    "details": {
+      "documentId": "doc_1791664124297_dwe7k",
+      "fileName": "rg_persistente.pdf",
+      "provider": "LocalOCRProvider"
+    },
+    "timestamp": "2026-10-10T20:28:44.383Z",
+    "id": "aud_1791664124383_oo8bq",
+    "createdAt": "2026-10-10T20:28:44.383Z",
+    "updatedAt": "2026-10-10T20:28:44.383Z"
+  },
+  {
+    "tenantId": "org_storage_a_1791664124157",
+    "processId": "pro_test_1791664124181",
+    "userId": "usr_a_1791664124171",
+    "userName": "Admin A",
+    "action": "OCR_COMPLETED",
+    "details": {
+      "documentId": "doc_1791664124297_dwe7k",
+      "textLength": 45,
+      "confidence": 0.95
+    },
+    "timestamp": "2026-10-10T20:28:44.398Z",
+    "id": "aud_1791664124398_hn678",
+    "createdAt": "2026-10-10T20:28:44.398Z",
+    "updatedAt": "2026-10-10T20:28:44.398Z"
+  },
+  {
+    "tenantId": "org_storage_a_1791664124157",
+    "processId": "pro_test_1791664124181",
+    "userId": "usr_a_1791664124171",
+    "userName": "Admin A",
+    "action": "ANALYSIS_COMPLETED",
+    "details": {
+      "jobId": "job_ee5e9631-1fc5-4fe1-980d-df1333ac3c67",
+      "score": 100,
+      "status": "APARENTEMENTE CONSISTENTE"
+    },
+    "timestamp": "2026-10-10T20:28:44.438Z",
+    "id": "aud_1791664124438_28t6h",
+    "createdAt": "2026-10-10T20:28:44.438Z",
+    "updatedAt": "2026-10-10T20:28:44.438Z"
+  },
+  {
+    "tenantId": "org_storage_a_1791664124157",
+    "processId": "pro_test_1791664124181",
+    "userId": "usr_a_1791664124171",
+    "userName": "Admin A",
+    "action": "DOCUMENTO_EXCLUIDO",
+    "details": {
+      "nomeArquivo": "rg_persistente.pdf",
+      "itemId": "item_rg_1"
+    },
+    "timestamp": "2026-10-10T20:28:44.502Z",
+    "id": "aud_1791664124502_cev70",
+    "createdAt": "2026-10-10T20:28:44.502Z",
+    "updatedAt": "2026-10-10T20:28:44.502Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": null,
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Escritório Alfa Contábil",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-10T20:35:27.060Z",
+    "id": "aud_1791664527060_douro",
+    "createdAt": "2026-10-10T20:35:27.060Z",
+    "updatedAt": "2026-10-10T20:35:27.060Z"
+  },
+  {
+    "tenantId": "org_1791664527245_7o4pm",
+    "processId": null,
+    "userId": "use_1791664527423_hwgyn",
+    "userName": "Beatriz Admin Beta",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Imobiliária Beta Prime",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-10T20:35:27.427Z",
+    "id": "aud_1791664527427_3u94o",
+    "createdAt": "2026-10-10T20:35:27.427Z",
+    "updatedAt": "2026-10-10T20:35:27.427Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": null,
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "CHECKLIST_CRIADO",
+    "details": {
+      "checklistId": "che_1791664527444_xhyi3",
+      "nome": "Homologação Exclusiva Alfa",
+      "totalItens": 2
+    },
+    "timestamp": "2026-10-10T20:35:27.448Z",
+    "id": "aud_1791664527448_3hmdd",
+    "createdAt": "2026-10-10T20:35:27.448Z",
+    "updatedAt": "2026-10-10T20:35:27.448Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Admissão João Silva - Desenvolvedor",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-10T20:35:27.483Z",
+    "id": "aud_1791664527483_u1t46",
+    "createdAt": "2026-10-10T20:35:27.483Z",
+    "updatedAt": "2026-10-10T20:35:27.483Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791664527532_m2cl5",
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "tamanho": 60,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-10T20:35:27.555Z",
+    "id": "aud_1791664527555_nynfm",
+    "createdAt": "2026-10-10T20:35:27.555Z",
+    "updatedAt": "2026-10-10T20:35:27.555Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": null,
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "USUARIO_ALTERADO",
+    "details": {
+      "acao": "CRIADO",
+      "novoUsuarioId": "use_1791664527940_05uop",
+      "nome": "Marcos Membro Operacional",
+      "papel": "MEMBRO"
+    },
+    "timestamp": "2026-10-10T20:35:27.945Z",
+    "id": "aud_1791664527945_vwka0",
+    "createdAt": "2026-10-10T20:35:27.945Z",
+    "updatedAt": "2026-10-10T20:35:27.945Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_EXCLUIDO",
+    "details": {
+      "nomeArquivo": "documento_rg_cnh.pdf",
+      "itemId": "item_p_1791664527471_0"
+    },
+    "timestamp": "2026-10-10T20:35:28.147Z",
+    "id": "aud_1791664528147_j3mfp",
+    "createdAt": "2026-10-10T20:35:28.147Z",
+    "updatedAt": "2026-10-10T20:35:28.147Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "DOCUMENTO_ENVIADO",
+    "details": {
+      "documentoId": "doc_1791664528184_boqd1",
+      "nomeArquivo": "documento_rg.pdf",
+      "tamanho": 32,
+      "itemNome": "Documento de identificação (RG / CNH válida)"
+    },
+    "timestamp": "2026-10-10T20:35:28.205Z",
+    "id": "aud_1791664528205_xdzhj",
+    "createdAt": "2026-10-10T20:35:28.205Z",
+    "updatedAt": "2026-10-10T20:35:28.205Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_STARTED",
+    "details": {
+      "jobId": "job_710685c1-0bb5-4b0b-9b01-6bd4a1bfd427",
+      "version": 1
+    },
+    "timestamp": "2026-10-10T20:35:28.220Z",
+    "id": "aud_1791664528220_ksik7",
+    "createdAt": "2026-10-10T20:35:28.220Z",
+    "updatedAt": "2026-10-10T20:35:28.220Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "OCR_STARTED",
+    "details": {
+      "documentId": "doc_1791664528184_boqd1",
+      "fileName": "documento_rg.pdf",
+      "provider": "MockOCRProvider"
+    },
+    "timestamp": "2026-10-10T20:35:28.234Z",
+    "id": "aud_1791664528234_mxiw8",
+    "createdAt": "2026-10-10T20:35:28.234Z",
+    "updatedAt": "2026-10-10T20:35:28.234Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "OCR_COMPLETED",
+    "details": {
+      "documentId": "doc_1791664528184_boqd1",
+      "textLength": 166,
+      "confidence": 0.98
+    },
+    "timestamp": "2026-10-10T20:35:28.243Z",
+    "id": "aud_1791664528243_xhmmf",
+    "createdAt": "2026-10-10T20:35:28.243Z",
+    "updatedAt": "2026-10-10T20:35:28.243Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "FINDING_CREATED",
+    "details": {
+      "code": "REQUIRED_DOCUMENTS_MISSING",
+      "severity": "HIGH",
+      "title": "Documentos obrigatórios ausentes"
+    },
+    "timestamp": "2026-10-10T20:35:28.294Z",
+    "id": "aud_1791664528294_gk3uy",
+    "createdAt": "2026-10-10T20:35:28.294Z",
+    "updatedAt": "2026-10-10T20:35:28.294Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_COMPLETED",
+    "details": {
+      "jobId": "job_710685c1-0bb5-4b0b-9b01-6bd4a1bfd427",
+      "score": 70,
+      "status": "POSSÍVEL PROBLEMA"
+    },
+    "timestamp": "2026-10-10T20:35:28.318Z",
+    "id": "aud_1791664528318_hvun3",
+    "createdAt": "2026-10-10T20:35:28.318Z",
+    "updatedAt": "2026-10-10T20:35:28.318Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "ANALYSIS_VIEWED",
+    "details": {
+      "jobId": "job_710685c1-0bb5-4b0b-9b01-6bd4a1bfd427",
+      "version": 1
+    },
+    "timestamp": "2026-10-10T20:35:28.538Z",
+    "id": "aud_1791664528538_5qvl9",
+    "createdAt": "2026-10-10T20:35:28.538Z",
+    "updatedAt": "2026-10-10T20:35:28.538Z"
+  },
+  {
+    "tenantId": "org_1791664528568_vnqew",
+    "processId": null,
+    "userId": "use_1791664528744_vc3wn",
+    "userName": "Usuario Teste Kiwify",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Kiwify Teste Organização",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-10T20:35:28.748Z",
+    "id": "aud_1791664528748_93gbr",
+    "createdAt": "2026-10-10T20:35:28.748Z",
+    "updatedAt": "2026-10-10T20:35:28.748Z"
+  },
+  {
+    "tenantId": "org_1791664528758_7jyeq",
+    "processId": null,
+    "userId": "use_1791664528937_98kkg",
+    "userName": "Usuario Expiravel",
+    "action": "ORGANIZACAO_CRIADA",
+    "details": {
+      "nomeEmpresa": "Empresa Expiravel Ltda",
+      "plano": "GRATIS"
+    },
+    "timestamp": "2026-10-10T20:35:28.941Z",
+    "id": "aud_1791664528941_wkuya",
+    "createdAt": "2026-10-10T20:35:28.941Z",
+    "updatedAt": "2026-10-10T20:35:28.941Z"
+  },
+  {
+    "tenantId": "org_1791664528758_7jyeq",
+    "processId": "pro_1791664528949_kcisb",
+    "userId": "use_1791664528937_98kkg",
+    "userName": "Usuario Expiravel",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Processo no Trial Valido",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-10T20:35:28.957Z",
+    "id": "aud_1791664528957_pmpng",
+    "createdAt": "2026-10-10T20:35:28.957Z",
+    "updatedAt": "2026-10-10T20:35:28.957Z"
+  },
+  {
+    "tenantId": "org_1791664528758_7jyeq",
+    "processId": "pro_1791664528984_dcm7a",
+    "userId": "use_1791664528937_98kkg",
+    "userName": "Usuario Expiravel",
+    "action": "PROCESSO_CRIADO",
+    "details": {
+      "nome": "Processo Apos Ativacao Vitalicia",
+      "checklist": "Admissão de Colaborador (CLT / Estágio)"
+    },
+    "timestamp": "2026-10-10T20:35:28.992Z",
+    "id": "aud_1791664528992_tjpsd",
+    "createdAt": "2026-10-10T20:35:28.992Z",
+    "updatedAt": "2026-10-10T20:35:28.992Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "userId": "use_1791664526941_j2g7p",
+    "userName": "Luciano Admin Alfa",
+    "action": "KIWIFY_ORDER_APPROVED",
+    "details": {
+      "orderId": "kw_runall_1791664529027",
+      "orderRef": null,
+      "plano": "VITALICIO",
+      "valor": 19.9,
+      "paymentMethod": "unknown",
+      "productName": "DocumentoCerto Plano Vitalício"
+    },
+    "timestamp": "2026-10-10T20:35:29.040Z",
+    "id": "aud_1791664529040_97jjx",
+    "createdAt": "2026-10-10T20:35:29.040Z",
+    "updatedAt": "2026-10-10T20:35:29.040Z"
+  },
+  {
+    "tenantId": "org_1791664527245_7o4pm",
+    "userId": "use_1791664527423_hwgyn",
+    "userName": "Beatriz Admin Beta",
+    "action": "PURCHASE_CLAIMED_SUCCESS",
+    "details": {
+      "orderId": "kw_unclaimed_runall_1791664529063",
+      "plano": "VITALICIO"
+    },
+    "timestamp": "2026-10-10T20:35:29.091Z",
+    "id": "aud_1791664529091_srmlg",
+    "createdAt": "2026-10-10T20:35:29.091Z",
+    "updatedAt": "2026-10-10T20:35:29.091Z"
   }
 ]

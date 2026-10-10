@@ -43,7 +43,7 @@ export class AuthController {
       const now = new Date();
       const trialEndsAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
 
-      const organization = organizationsDb.insert({
+      const organization = await organizationsDb.insertAsync({
         nome: nomeEmpresa.trim(),
         cpfCnpj: (cpfCnpj || '').trim(),
         plano: 'GRATIS',
@@ -57,7 +57,7 @@ export class AuthController {
       });
 
       // 2. Cria o Usuário Principal (ADMIN do Tenant)
-      const user = usersDb.insert({
+      const user = await usersDb.insertAsync({
         tenantId: organization.id,
         nome: nome.trim(),
         email: normalizedEmail,

@@ -8,9 +8,11 @@ function toCamel(obj) {
 
   const res = {};
   for (const [k, v] of Object.entries(obj)) {
-    // Campos específicos mapeados
     const camelKey = k.replace(/_([a-z0-9])/g, (_, g) => g.toUpperCase());
     res[camelKey] = (v && typeof v === 'object' && !(v instanceof Date)) ? toCamel(v) : v;
+    if (camelKey === 'statusDeterministico') {
+      res['statusDeterminístico'] = res[camelKey];
+    }
   }
   return res;
 }
@@ -18,8 +20,11 @@ function toCamel(obj) {
 function toSnake(obj) {
   if (!obj || typeof obj !== 'object') return obj;
   const res = {};
-  for (const [k, v] of Object.entries(obj)) {
-    const snakeKey = k.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+  for (let [k, v] of Object.entries(obj)) {
+    if (k === 'statusDeterminístico') k = 'statusDeterministico';
+    const snakeKey = k
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
     res[snakeKey] = v;
   }
   return res;
@@ -29,6 +34,24 @@ export class PgRepository {
   constructor(tableName, jsonFallbackName) {
     this.tableName = tableName;
     this.jsonDb = new JsonDB(jsonFallbackName || tableName);
+    this._columns = null;
+  }
+
+  async getTableColumns() {
+    if (this._columns) return this._columns;
+    if (!this.isUsingPg()) return null;
+    try {
+      const res = await query(
+        `SELECT column_name FROM information_schema.columns WHERE table_name = $1`,
+        [this.tableName]
+      );
+      if (res && res.rows && res.rows.length > 0) {
+        this._columns = new Set(res.rows.map(r => r.column_name));
+      }
+      return this._columns;
+    } catch {
+      return null;
+    }
   }
 
   isUsingPg() {
@@ -117,9 +140,10 @@ export class PgRepository {
 
   async insertPg(record) {
     const snakeObj = toSnake(record);
-    // Remove chaves nulas ou undefined se necessário
-    const keys = Object.keys(snakeObj);
-    const values = Object.values(snakeObj).map(v => {
+    const validCols = await this.getTableColumns();
+    const keys = Object.keys(snakeObj).filter(k => !validCols || validCols.has(k));
+    const values = keys.map(k => {
+      const v = snakeObj[k];
       if (typeof v === 'object' && v !== null && !(v instanceof Date)) {
         return JSON.stringify(v);
       }
@@ -162,8 +186,10 @@ export class PgRepository {
     delete snakeObj.id; // Não atualiza chave primária
     snakeObj.updated_at = new Date().toISOString();
 
-    const keys = Object.keys(snakeObj);
-    const values = Object.values(snakeObj).map(v => {
+    const validCols = await this.getTableColumns();
+    const keys = Object.keys(snakeObj).filter(k => !validCols || validCols.has(k));
+    const values = keys.map(k => {
+      const v = snakeObj[k];
       if (typeof v === 'object' && v !== null && !(v instanceof Date)) {
         return JSON.stringify(v);
       }

@@ -207,5 +207,135 @@
     "id": "use_1791334170513_n07x9",
     "createdAt": "2026-10-07T00:49:30.513Z",
     "updatedAt": "2026-10-07T00:49:30.513Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "nome": "Luciano Admin Alfa",
+    "email": "luciano.alfa.1791664034656@alfa.com.br",
+    "senhaHash": "35fc318242b90b993b77603fe44375b0:e8fc6d6eba0a59b1bcdddf50c86b2bb626947197ce86dd46fbc443b28cdc0178219d00459cb9625906d24a420c4f0b24ab94e4b9f32b0e4132eb4481f682cd86",
+    "papel": "ADMIN",
+    "ativo": true,
+    "id": "use_1791664035038_jsd0o",
+    "createdAt": "2026-10-10T20:27:15.038Z",
+    "updatedAt": "2026-10-10T20:27:15.038Z"
+  },
+  {
+    "tenantId": "org_1791664035268_wixbk",
+    "nome": "Beatriz Admin Beta",
+    "email": "beatriz.beta.1791664035265@beta.com.br",
+    "senhaHash": "631b4c2adee3d0b0f4235d1653c165bd:10613d62802afb6ab3476a0c7fc54bc55be1539a0dd21b2ae499f004c551c2984d1d28832e517f623f1b966a1973e6ea991a5fc0a3ad761f198bce7276b7ced8",
+    "papel": "ADMIN",
+    "ativo": true,
+    "id": "use_1791664035448_9rgl7",
+    "createdAt": "2026-10-10T20:27:15.448Z",
+    "updatedAt": "2026-10-10T20:27:15.448Z"
+  },
+  {
+    "tenantId": "org_1791664034706_6h99d",
+    "nome": "Marcos Membro Operacional",
+    "email": "marcos.membro.1791664035615@alfa.com.br",
+    "senhaHash": "3bfe5231a24d9ab4589ab99a57e44bfc:5266660ce892ec7dfc0fc552dbde9e77acd91aba09384f6c356edec62d76b8541efcd260f68a36a2cdab719b41fee743eb5a3731ada446f9b0c5f89a62e6e737",
+    "papel": "MEMBRO",
+    "ativo": true,
+    "id": "use_1791664035808_qfi42",
+    "createdAt": "2026-10-10T20:27:15.808Z",
+    "updatedAt": "2026-10-10T20:27:15.808Z"
+  },
+  {
+    "tenantId": "org_1791664036521_2k3tz",
+    "nome": "Usuario Teste Kiwify",
+    "email": "trial.user.1791664036519@kiwify.com.br",
+    "senhaHash": "746b42c49a6fdd0c8ec1ec0b3380c295:ce65bfb66dcdc46da828088227b8e74870eef91165997aa9ce2b3e431e73903a98ad20b5294cd3794e9d7d3a9485daeac6cc6fd5f08a882f772b3099c94d08b2",
+    "papel": "ADMIN",
+    "ativo": true,
+    "id": "use_1791664036880_8vp0j",
+    "createdAt": "2026-10-10T20:27:16.880Z",
+    "updatedAt": "2026-10-10T20:27:16.880Z"
+  },
+  {
+    "tenantId": "org_1791664036896_uwuba",
+    "nome": "Usuario Expiravel",
+    "email": "expirado.1791664036894@teste.com",
+    "senhaHash": "7a42e1d9e69bbd091c68835d44c3552b:dc8adb8a4a89289c9aaec6cac32745a357003b0193e72272aa920d1c0a23fa1054e6f101f87f4d647765911e3256b4ee35632b5db6aa791d2cf4ece4842e5382",
+    "papel": "ADMIN",
+    "ativo": true,
+    "id": "use_1791664037093_abitk",
+    "createdAt": "2026-10-10T20:27:17.093Z",
+    "updatedAt": "2026-10-10T20:27:17.093Z"
+  },
+  {
+    "id": "usr_a_1791664124171",
+    "tenantId": "org_storage_a_1791664124157",
+    "nome": "Admin A",
+    "email": "a_1791664124171@teste.com",
+    "papel": "ADMIN",
+    "ativo": true,
+    "createdAt": "2026-10-10T20:28:44.171Z",
+    "updatedAt": "2026-10-10T20:28:44.171Z"
+  },
+  {
+    "id": "usr_b_1791664124171",
+    "tenantId": "org_storage_b_1791664124157",
+    "nome": "Admin B",
+    "email": "b_1791664124171@teste.com",
+    "papel": "ADMIN",
+    "ativo": true,
+    "createdAt": "2026-10-10T20:28:44.175Z",
+    "updatedAt": "2026-10-10T20:28:44.175Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "nome": "Luciano Admin Alfa",
+    "email": "luciano.alfa.1791664526715@alfa.com.br",
+    "senhaHash": "10d9c63626031320802c539ed9b7fa9e:af1fdd5672d9a4f3a4d739e0cace29c4dfcbbf785df75abb12f30faeed8b16db9b319b0c76a648e651fd9ef032bb578f880a32d1e97710febc182f599819331e",
+    "papel": "ADMIN",
+    "ativo": true,
+    "id": "use_1791664526941_j2g7p",
+    "createdAt": "2026-10-10T20:35:26.941Z",
+    "updatedAt": "2026-10-10T20:35:26.941Z"
+  },
+  {
+    "tenantId": "org_1791664527245_7o4pm",
+    "nome": "Beatriz Admin Beta",
+    "email": "beatriz.beta.1791664527242@beta.com.br",
+    "senhaHash": "226f3f7f2726ecf210e44913e6a901bb:ff8a83eb5d47aab9999a53f34fb75e677ff4cf8ccd57c59046d5bf9e7af703347b767e9d2efb52cc10e0effb841e1283ec32c92f8bbe6b2aea2a0c24aad10210",
+    "papel": "ADMIN",
+    "ativo": true,
+    "id": "use_1791664527423_hwgyn",
+    "createdAt": "2026-10-10T20:35:27.423Z",
+    "updatedAt": "2026-10-10T20:35:27.423Z"
+  },
+  {
+    "tenantId": "org_1791664526753_67fbl",
+    "nome": "Marcos Membro Operacional",
+    "email": "marcos.membro.1791664527569@alfa.com.br",
+    "senhaHash": "db1a488ea58c7ceb9e3f378d0b163e1d:26a02a709fc4a8a479b7235d3a26a6aa816bd6c7a1ae595449aecfd2232a71b790c564fececf45a994ba56ceb628b4e198f947d6f78e9231b7b157bc9b314e8e",
+    "papel": "MEMBRO",
+    "ativo": true,
+    "id": "use_1791664527940_05uop",
+    "createdAt": "2026-10-10T20:35:27.940Z",
+    "updatedAt": "2026-10-10T20:35:27.940Z"
+  },
+  {
+    "tenantId": "org_1791664528568_vnqew",
+    "nome": "Usuario Teste Kiwify",
+    "email": "trial.user.1791664528566@kiwify.com.br",
+    "senhaHash": "2a4941744eb55397a5de2f36f06a9ad4:c824ef662ca5631a14750201dc1c8b88b9842953b87bd37790d33acc1b28703cfc7433a9d1fbc16dfe1b9e35aaf5dca3833ff7a1333a72b683bf5be2c9084282",
+    "papel": "ADMIN",
+    "ativo": true,
+    "id": "use_1791664528744_vc3wn",
+    "createdAt": "2026-10-10T20:35:28.744Z",
+    "updatedAt": "2026-10-10T20:35:28.744Z"
+  },
+  {
+    "tenantId": "org_1791664528758_7jyeq",
+    "nome": "Usuario Expiravel",
+    "email": "expirado.1791664528756@teste.com",
+    "senhaHash": "33f1c4f7ba46f497bdb90427fcbe5635:efd912b26151dca8b38458aed336b18828cbbcf0be13a1e5dc11095a3f4b3733f64fa676bab1f53246b4d297421cecad9ec42c714e017d26bbba8a886ed08019",
+    "papel": "ADMIN",
+    "ativo": true,
+    "id": "use_1791664528937_98kkg",
+    "createdAt": "2026-10-10T20:35:28.937Z",
+    "updatedAt": "2026-10-10T20:35:28.937Z"
   }
 ]

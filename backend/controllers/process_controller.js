@@ -122,7 +122,7 @@ export class ProcessController {
 
       const statusCalculado = StatusService.calculate(processItens);
 
-      const newProcess = processesDb.insert({
+      const newProcess = await processesDb.insertAsync({
         tenantId: req.user.tenantId,
         nome: nome.trim(),
         tipo: tipo || 'Conferência Geral',

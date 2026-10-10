@@ -124,7 +124,7 @@ export class DocumentController {
       // Recalcula status geral determinístico
       const statusCalculado = StatusService.calculate(itens);
 
-      const updatedProcess = processesDb.update(processId, {
+      const updatedProcess = await processesDb.updateAsync(processId, {
         itens,
         statusDeterminístico: statusCalculado.status
       });

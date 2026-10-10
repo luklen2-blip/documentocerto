@@ -54,5 +54,33 @@
     "jobId": "job_81c84c6b-a761-4a5e-8c4b-4e723f49f8cf",
     "createdAt": "2026-10-07T00:49:30.169Z",
     "updatedAt": "2026-10-07T00:49:30.169Z"
+  },
+  {
+    "id": "fnd_e9168666-e2ae-4f73-9138-1bdd0af3f37c",
+    "severity": "HIGH",
+    "code": "REQUIRED_DOCUMENTS_MISSING",
+    "title": "Documentos obrigatórios ausentes",
+    "message": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+    "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+    "evidence": [],
+    "tenantId": "org_1791664034706_6h99d",
+    "processId": "pro_1791664035504_mqe10",
+    "jobId": "job_e70064ae-d303-4fa6-99f8-391f10cbce68",
+    "createdAt": "2026-10-10T20:27:16.227Z",
+    "updatedAt": "2026-10-10T20:27:16.227Z"
+  },
+  {
+    "id": "fnd_d7f950bf-383e-46cb-af2b-385b58d86ebc",
+    "severity": "HIGH",
+    "code": "REQUIRED_DOCUMENTS_MISSING",
+    "title": "Documentos obrigatórios ausentes",
+    "message": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+    "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+    "evidence": [],
+    "tenantId": "org_1791664526753_67fbl",
+    "processId": "pro_1791664527472_wifj5",
+    "jobId": "job_710685c1-0bb5-4b0b-9b01-6bd4a1bfd427",
+    "createdAt": "2026-10-10T20:35:28.289Z",
+    "updatedAt": "2026-10-10T20:35:28.289Z"
   }
 ]
