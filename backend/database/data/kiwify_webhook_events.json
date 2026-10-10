@@ -78,5 +78,205 @@
     "id": "kiw_1791664529072_c58yn",
     "createdAt": "2026-10-10T20:35:29.072Z",
     "updatedAt": "2026-10-10T20:35:29.072Z"
+  },
+  {
+    "orderId": "kw_runall_1791665459439",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "luciano.alfa.1791665457284@alfa.com.br",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_runall_1791665459439",
+      "order_status": "paid",
+      "Product": {
+        "product_name": "DocumentoCerto Plano Vitalício"
+      },
+      "Customer": {
+        "email": "luciano.alfa.1791665457284@alfa.com.br",
+        "full_name": "Luciano Admin Alfa"
+      }
+    },
+    "processedAt": "2026-10-10T20:50:59.463Z",
+    "id": "kiw_1791665459463_7vmkn",
+    "createdAt": "2026-10-10T20:50:59.463Z",
+    "updatedAt": "2026-10-10T20:50:59.463Z"
+  },
+  {
+    "orderId": "kw_unclaimed_runall_1791665459474",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "cliente_desconhecido@teste.com",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_unclaimed_runall_1791665459474",
+      "order_status": "paid",
+      "Customer": {
+        "email": "cliente_desconhecido@teste.com"
+      }
+    },
+    "processedAt": "2026-10-10T20:50:59.484Z",
+    "id": "kiw_1791665459484_u96q1",
+    "createdAt": "2026-10-10T20:50:59.484Z",
+    "updatedAt": "2026-10-10T20:50:59.484Z"
+  },
+  {
+    "orderId": "kw_runall_1791665599532",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "luciano.alfa.1791665597187@alfa.com.br",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_runall_1791665599532",
+      "order_status": "paid",
+      "Product": {
+        "product_name": "DocumentoCerto Plano Vitalício"
+      },
+      "Customer": {
+        "email": "luciano.alfa.1791665597187@alfa.com.br",
+        "full_name": "Luciano Admin Alfa"
+      }
+    },
+    "processedAt": "2026-10-10T20:53:19.562Z",
+    "id": "kiw_1791665599562_fjr8b",
+    "createdAt": "2026-10-10T20:53:19.562Z",
+    "updatedAt": "2026-10-10T20:53:19.562Z"
+  },
+  {
+    "orderId": "kw_unclaimed_runall_1791665599573",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "cliente_desconhecido@teste.com",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_unclaimed_runall_1791665599573",
+      "order_status": "paid",
+      "Customer": {
+        "email": "cliente_desconhecido@teste.com"
+      }
+    },
+    "processedAt": "2026-10-10T20:53:19.582Z",
+    "id": "kiw_1791665599582_y6x9i",
+    "createdAt": "2026-10-10T20:53:19.582Z",
+    "updatedAt": "2026-10-10T20:53:19.582Z"
+  },
+  {
+    "orderId": "kw_runall_1791666144462",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "luciano.alfa.1791666141928@alfa.com.br",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_runall_1791666144462",
+      "order_status": "paid",
+      "Product": {
+        "product_name": "DocumentoCerto Plano Vitalício"
+      },
+      "Customer": {
+        "email": "luciano.alfa.1791666141928@alfa.com.br",
+        "full_name": "Luciano Admin Alfa"
+      }
+    },
+    "processedAt": "2026-10-10T21:02:24.490Z",
+    "id": "kiw_1791666144490_tn8sj",
+    "createdAt": "2026-10-10T21:02:24.490Z",
+    "updatedAt": "2026-10-10T21:02:24.490Z"
+  },
+  {
+    "orderId": "kw_unclaimed_runall_1791666144501",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "cliente_desconhecido@teste.com",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_unclaimed_runall_1791666144501",
+      "order_status": "paid",
+      "Customer": {
+        "email": "cliente_desconhecido@teste.com"
+      }
+    },
+    "processedAt": "2026-10-10T21:02:24.511Z",
+    "id": "kiw_1791666144511_3yzes",
+    "createdAt": "2026-10-10T21:02:24.511Z",
+    "updatedAt": "2026-10-10T21:02:24.511Z"
+  },
+  {
+    "orderId": "kw_runall_1791666178181",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "luciano.alfa.1791666175630@alfa.com.br",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_runall_1791666178181",
+      "order_status": "paid",
+      "Product": {
+        "product_name": "DocumentoCerto Plano Vitalício"
+      },
+      "Customer": {
+        "email": "luciano.alfa.1791666175630@alfa.com.br",
+        "full_name": "Luciano Admin Alfa"
+      }
+    },
+    "processedAt": "2026-10-10T21:02:58.213Z",
+    "id": "kiw_1791666178214_uo33b",
+    "createdAt": "2026-10-10T21:02:58.214Z",
+    "updatedAt": "2026-10-10T21:02:58.214Z"
+  },
+  {
+    "orderId": "kw_unclaimed_runall_1791666178226",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "cliente_desconhecido@teste.com",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_unclaimed_runall_1791666178226",
+      "order_status": "paid",
+      "Customer": {
+        "email": "cliente_desconhecido@teste.com"
+      }
+    },
+    "processedAt": "2026-10-10T21:02:58.238Z",
+    "id": "kiw_1791666178238_gymtl",
+    "createdAt": "2026-10-10T21:02:58.238Z",
+    "updatedAt": "2026-10-10T21:02:58.238Z"
+  },
+  {
+    "orderId": "kw_runall_1791666633604",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "luciano.alfa.1791666631218@alfa.com.br",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_runall_1791666633604",
+      "order_status": "paid",
+      "Product": {
+        "product_name": "DocumentoCerto Plano Vitalício"
+      },
+      "Customer": {
+        "email": "luciano.alfa.1791666631218@alfa.com.br",
+        "full_name": "Luciano Admin Alfa"
+      }
+    },
+    "processedAt": "2026-10-10T21:10:33.733Z",
+    "id": "kiw_1791666633733_jskv5",
+    "createdAt": "2026-10-10T21:10:33.733Z",
+    "updatedAt": "2026-10-10T21:10:33.733Z"
+  },
+  {
+    "orderId": "kw_unclaimed_runall_1791666633746",
+    "eventType": "order_approved",
+    "status": "PROCESSED",
+    "customerEmail": "cliente_desconhecido@teste.com",
+    "productId": null,
+    "payload": {
+      "order_id": "kw_unclaimed_runall_1791666633746",
+      "order_status": "paid",
+      "Customer": {
+        "email": "cliente_desconhecido@teste.com"
+      }
+    },
+    "processedAt": "2026-10-10T21:10:33.753Z",
+    "id": "kiw_1791666633754_d0a1k",
+    "createdAt": "2026-10-10T21:10:33.754Z",
+    "updatedAt": "2026-10-10T21:10:33.754Z"
   }
 ]

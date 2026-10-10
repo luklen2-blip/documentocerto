@@ -135,5 +135,110 @@
     "id": "ai__1791664528308_7lrnf",
     "createdAt": "2026-10-10T20:35:28.308Z",
     "updatedAt": "2026-10-10T20:35:28.308Z"
+  },
+  {
+    "tenantId": "org_1791665457363_p9haz",
+    "processId": "pro_1791665458001_22p1h",
+    "jobId": "job_188ce768-6bac-4ce2-902b-8b5d702bcf0d",
+    "summary": "Atenção: Foram identificados 1 ponto(s) crítico(s) de possível inconsistência (como divergências entre documentos ou dados inválidos) que requerem correção antes do envio.",
+    "findings": [
+      {
+        "code": "REQUIRED_DOCUMENTS_MISSING",
+        "severity": "HIGH",
+        "title": "Documentos obrigatórios ausentes",
+        "explanation": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+        "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+        "document_name": null,
+        "evidence_ids": []
+      }
+    ],
+    "confidence": 0.94,
+    "id": "ai__1791665458711_9i6ii",
+    "createdAt": "2026-10-10T20:50:58.711Z",
+    "updatedAt": "2026-10-10T20:50:58.711Z"
+  },
+  {
+    "tenantId": "org_1791665597224_sin8r",
+    "processId": "pro_1791665598018_prs8p",
+    "jobId": "job_09c2dd6e-5929-4d8b-bbe5-2792c45ca8e4",
+    "summary": "Atenção: Foram identificados 1 ponto(s) crítico(s) de possível inconsistência (como divergências entre documentos ou dados inválidos) que requerem correção antes do envio.",
+    "findings": [
+      {
+        "code": "REQUIRED_DOCUMENTS_MISSING",
+        "severity": "HIGH",
+        "title": "Documentos obrigatórios ausentes",
+        "explanation": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+        "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+        "document_name": null,
+        "evidence_ids": []
+      }
+    ],
+    "confidence": 0.94,
+    "id": "ai__1791665598750_90dvp",
+    "createdAt": "2026-10-10T20:53:18.750Z",
+    "updatedAt": "2026-10-10T20:53:18.750Z"
+  },
+  {
+    "tenantId": "org_1791666141967_xh5ed",
+    "processId": "pro_1791666142766_bwtt4",
+    "jobId": "job_fbca319c-64ec-412c-8abe-892f596c7214",
+    "summary": "Atenção: Foram identificados 1 ponto(s) crítico(s) de possível inconsistência (como divergências entre documentos ou dados inválidos) que requerem correção antes do envio.",
+    "findings": [
+      {
+        "code": "REQUIRED_DOCUMENTS_MISSING",
+        "severity": "HIGH",
+        "title": "Documentos obrigatórios ausentes",
+        "explanation": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+        "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+        "document_name": null,
+        "evidence_ids": []
+      }
+    ],
+    "confidence": 0.94,
+    "id": "ai__1791666143516_0vs0k",
+    "createdAt": "2026-10-10T21:02:23.516Z",
+    "updatedAt": "2026-10-10T21:02:23.516Z"
+  },
+  {
+    "tenantId": "org_1791666175700_1phl6",
+    "processId": "pro_1791666176517_235x3",
+    "jobId": "job_ffbe5d95-dba7-4845-9905-4eff3647ad8e",
+    "summary": "Atenção: Foram identificados 1 ponto(s) crítico(s) de possível inconsistência (como divergências entre documentos ou dados inválidos) que requerem correção antes do envio.",
+    "findings": [
+      {
+        "code": "REQUIRED_DOCUMENTS_MISSING",
+        "severity": "HIGH",
+        "title": "Documentos obrigatórios ausentes",
+        "explanation": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+        "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+        "document_name": null,
+        "evidence_ids": []
+      }
+    ],
+    "confidence": 0.94,
+    "id": "ai__1791666177370_x2svl",
+    "createdAt": "2026-10-10T21:02:57.370Z",
+    "updatedAt": "2026-10-10T21:02:57.370Z"
+  },
+  {
+    "tenantId": "org_1791666631307_b3e9w",
+    "processId": "pro_1791666632067_vlmeg",
+    "jobId": "job_62daafdc-c0f2-4551-b8fc-c6a6da1085c0",
+    "summary": "Atenção: Foram identificados 1 ponto(s) crítico(s) de possível inconsistência (como divergências entre documentos ou dados inválidos) que requerem correção antes do envio.",
+    "findings": [
+      {
+        "code": "REQUIRED_DOCUMENTS_MISSING",
+        "severity": "HIGH",
+        "title": "Documentos obrigatórios ausentes",
+        "explanation": "Existem 5 item(ns) obrigatório(s) não anexado(s): Comprovante de CPF regular, Comprovante de residência atualizado, Dados bancários (conta corrente/salário), Formulários admissionais preenchidos, Contrato de trabalho assinado.",
+        "recommendation": "Anexe todos os documentos exigidos pelo checklist antes do envio.",
+        "document_name": null,
+        "evidence_ids": []
+      }
+    ],
+    "confidence": 0.94,
+    "id": "ai__1791666632790_668wb",
+    "createdAt": "2026-10-10T21:10:32.790Z",
+    "updatedAt": "2026-10-10T21:10:32.790Z"
   }
 ]

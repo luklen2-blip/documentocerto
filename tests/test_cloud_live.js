@@ -90,7 +90,7 @@ async function runLiveTests() {
   console.log('================================================================\n');
 
   let passed = 0;
-  const total = 11;
+  const total = 12;
 
   // 1. Monitoramento 24/7 & Conectividade com Banco
   process.stdout.write('⏳ [1/11] Saúde 24/7 (/api/health) e PostgreSQL... ');
@@ -262,6 +262,18 @@ async function runLiveTests() {
     throw new Error(`Webhook Kiwify não rejeitou chamada desprotegida: HTTP ${whRes.status}`);
   }
   console.log('✅ APROVADO (HTTP 401 Rejeição de Acesso Indevido)');
+  passed++;
+
+  // 12. Dashboard de Métricas e Funil (/api/admin/metrics)
+  process.stdout.write('⏳ [12/12] Dashboard de Métricas & Funil (/api/admin/metrics)... ');
+  const metricsRes = await requestUrl('/api/admin/metrics', {
+    headers: { 'Authorization': `Bearer ${tokenA}` }
+  });
+  if (metricsRes.status !== 200 || !metricsRes.data?.data?.funil) {
+    throw new Error(`Falha no endpoint de métricas: HTTP ${metricsRes.status}`);
+  }
+  const m = metricsRes.data.data;
+  console.log(`✅ APROVADO (${m.funil.totalCadastros} contas, ${m.funil.vitaliciosAtivos} vitalícios, ${m.funil.taxaConversao} conversão)`);
   passed++;
 
   console.log('\n================================================================');

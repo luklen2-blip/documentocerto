@@ -110,6 +110,9 @@
       <button onclick="window.app.navigate('audit')" id="tab-audit" class="subnav-btn flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-100">
         <i data-lucide="history" class="w-4 h-4"></i> Auditoria
       </button>
+      <button onclick="window.app.openAdminMetricsModal()" id="tab-analytics" class="subnav-btn flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 ml-auto transition border border-indigo-200">
+        <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Analytics & Funil
+      </button>
     </div>
   </nav>
 
@@ -918,6 +921,154 @@
       <div class="pt-2 text-right">
         <button onclick="window.app.closeModal('modal-legal')" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg text-xs">
           Compreendido e Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ANALYTICS & FUNIL DE CONVERSÃO (GESTOR / ADMIN) -->
+  <div id="modal-admin-metrics" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full p-6 sm:p-8 max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 relative fade-in">
+      <button onclick="window.app.closeModal('modal-admin-metrics')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
+            <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">Analytics & Funil de Conversão Comercial</h3>
+            <p class="text-xs text-slate-500">Métricas em tempo real integradas ao PostgreSQL Neon e Kiwify.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="metrics-storage-engine" class="text-[10px] uppercase font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded">PostgreSQL</span>
+          <button onclick="window.app.loadAdminMetrics()" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-lg text-xs flex items-center gap-1.5 transition">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Atualizar
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-y-auto pr-1 my-4 space-y-6 flex-1">
+        <!-- Grid de KPIs Principais -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total de Contas</span>
+            <div id="metric-total-cadastros" class="text-2xl font-black text-slate-900 mt-1">--</div>
+            <div class="text-[10px] text-emerald-600 font-medium mt-1">
+              +<span id="metric-cadastros-hoje">0</span> hoje • +<span id="metric-cadastros-7d">0</span> na semana
+            </div>
+          </div>
+
+          <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-3.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-800">Trials Ativos (24h)</span>
+            <div id="metric-trials-ativos" class="text-2xl font-black text-amber-700 mt-1">--</div>
+            <div class="text-[10px] text-amber-600 mt-1">
+              <span id="metric-trials-expirados">0</span> expirados
+            </div>
+          </div>
+
+          <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-3.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Vitalícios Pagos</span>
+            <div id="metric-vitalicios-ativos" class="text-2xl font-black text-emerald-700 mt-1">--</div>
+            <div class="text-[10px] text-emerald-600 font-semibold mt-1">
+              Kiwify R$ 19,90
+            </div>
+          </div>
+
+          <div class="bg-indigo-50/60 border border-indigo-200 rounded-xl p-3.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-800">Taxa de Conversão</span>
+            <div id="metric-taxa-conversao" class="text-2xl font-black text-indigo-700 mt-1">--%</div>
+            <div class="text-[10px] text-indigo-600 mt-1">
+              Funil Trial → Vitalício
+            </div>
+          </div>
+        </div>
+
+        <!-- Seção de Receita e Volume Operacional -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+            <span class="text-xs font-semibold text-slate-500">Receita Total Bruta</span>
+            <div id="metric-receita-total" class="text-xl font-black text-emerald-600 mt-1">R$ 0,00</div>
+            <p class="text-[11px] text-slate-400 mt-0.5">Ticket único R$ 19,90 vitalício</p>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+            <span class="text-xs font-semibold text-slate-500">Volume de Processos</span>
+            <div id="metric-total-processos" class="text-xl font-bold text-slate-800 mt-1">--</div>
+            <p class="text-[11px] text-slate-400 mt-0.5"><span id="metric-total-documentos">--</span> documentos anexados</p>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+            <span class="text-xs font-semibold text-slate-500">Conferências IA / OCR</span>
+            <div id="metric-total-conferencias" class="text-xl font-bold text-indigo-600 mt-1">--</div>
+            <p class="text-[11px] text-slate-400 mt-0.5">Extração e checagem cruzada</p>
+          </div>
+        </div>
+
+        <!-- Funil Visual de Conversão -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Estágios do Funil de Conversão</h4>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs font-medium text-slate-600 mb-1">
+                <span>1. Cadastros na Plataforma</span>
+                <span id="funil-step1-count" class="font-bold">100%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2.5">
+                <div class="bg-slate-600 h-2.5 rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-medium text-slate-600 mb-1">
+                <span>2. Ativação de Trial (24h de uso)</span>
+                <span id="funil-step2-count" class="font-bold text-amber-700">--%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2.5">
+                <div id="funil-step2-bar" class="bg-amber-500 h-2.5 rounded-full" style="width: 50%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-medium text-slate-600 mb-1">
+                <span>3. Conversão para Plano Vitalício (Kiwify)</span>
+                <span id="funil-step3-count" class="font-bold text-emerald-700">--%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2.5">
+                <div id="funil-step3-bar" class="bg-emerald-600 h-2.5 rounded-full" style="width: 25%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabela de Últimas Transações Kiwify -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+          <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Últimas Transações Kiwify</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-600">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase">
+                <tr>
+                  <th class="py-2 px-2.5">Pedido</th>
+                  <th class="py-2 px-2.5">Cliente</th>
+                  <th class="py-2 px-2.5">Valor</th>
+                  <th class="py-2 px-2.5">Status</th>
+                  <th class="py-2 px-2.5">Data</th>
+                </tr>
+              </thead>
+              <tbody id="metrics-transactions-tbody">
+                <tr><td colspan="5" class="py-3 text-center text-slate-400">Nenhuma transação registrada ainda.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 text-right border-t border-slate-100">
+        <button onclick="window.app.closeModal('modal-admin-metrics')" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg text-xs">
+          Fechar
         </button>
       </div>
     </div>

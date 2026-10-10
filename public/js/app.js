@@ -1274,6 +1274,109 @@ class DocumentoCertoApp {
     });
   }
 
+  // ================= ANALYTICS E FUNIL COMERCIAL (ADMIN) =================
+  openAdminMetricsModal() {
+    this.openModal('modal-admin-metrics');
+    this.loadAdminMetrics();
+  }
+
+  async loadAdminMetrics() {
+    try {
+      const res = await this.api('/api/admin/metrics');
+      if (!res.success) {
+        this.toast(res.error?.message || 'Falha ao carregar métricas administrativas.', 'error');
+        return;
+      }
+
+      const m = res.data;
+      if (!m) return;
+
+      const engineEl = document.getElementById('metrics-storage-engine');
+      if (engineEl) engineEl.textContent = m.storageEngine || 'PostgreSQL';
+
+      const totalCad = document.getElementById('metric-total-cadastros');
+      if (totalCad) totalCad.textContent = m.funil.totalCadastros || 0;
+
+      const cadHoje = document.getElementById('metric-cadastros-hoje');
+      if (cadHoje) cadHoje.textContent = m.crescimento.cadastrosHoje || 0;
+
+      const cad7d = document.getElementById('metric-cadastros-7d');
+      if (cad7d) cad7d.textContent = m.crescimento.cadastrosUltimos7Dias || 0;
+
+      const trialsAtivos = document.getElementById('metric-trials-ativos');
+      if (trialsAtivos) trialsAtivos.textContent = m.funil.trialsAtivos || 0;
+
+      const trialsExp = document.getElementById('metric-trials-expirados');
+      if (trialsExp) trialsExp.textContent = m.funil.trialsExpirados || 0;
+
+      const vitalicios = document.getElementById('metric-vitalicios-ativos');
+      if (vitalicios) vitalicios.textContent = m.funil.vitaliciosAtivos || 0;
+
+      const taxaConv = document.getElementById('metric-taxa-conversao');
+      if (taxaConv) taxaConv.textContent = m.funil.taxaConversao || '0.0%';
+
+      const receitaEl = document.getElementById('metric-receita-total');
+      if (receitaEl) receitaEl.textContent = m.financeiro.receitaFormatada || 'R$ 0,00';
+
+      const procsEl = document.getElementById('metric-total-processos');
+      if (procsEl) procsEl.textContent = m.operacional.totalProcessos || 0;
+
+      const docsEl = document.getElementById('metric-total-documentos');
+      if (docsEl) docsEl.textContent = m.operacional.totalDocumentos || 0;
+
+      const confsEl = document.getElementById('metric-total-conferencias');
+      if (confsEl) confsEl.textContent = m.operacional.totalConferenciasInteligentes || 0;
+
+      const total = m.funil.totalCadastros || 1;
+      const trialPct = Math.min(100, Math.round(((m.funil.trialsAtivos || 0) / total) * 100));
+      const vitPct = Math.min(100, Math.round(((m.funil.vitaliciosAtivos || 0) / total) * 100));
+
+      const step2Count = document.getElementById('funil-step2-count');
+      if (step2Count) step2Count.textContent = `${m.funil.trialsAtivos || 0} (${trialPct}%)`;
+
+      const step2Bar = document.getElementById('funil-step2-bar');
+      if (step2Bar) step2Bar.style.width = `${Math.max(5, trialPct)}%`;
+
+      const step3Count = document.getElementById('funil-step3-count');
+      if (step3Count) step3Count.textContent = `${m.funil.vitaliciosAtivos || 0} (${m.funil.taxaConversao})`;
+
+      const step3Bar = document.getElementById('funil-step3-bar');
+      if (step3Bar) step3Bar.style.width = `${Math.max(5, vitPct)}%`;
+
+      const tbody = document.getElementById('metrics-transactions-tbody');
+      if (tbody) {
+        tbody.innerHTML = '';
+        if (!m.ultimasTransacoes || m.ultimasTransacoes.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="py-3 text-center text-slate-400">Nenhuma transação registrada ainda.</td></tr>';
+        } else {
+          m.ultimasTransacoes.forEach(t => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-slate-100 hover:bg-slate-50 transition';
+            const valFmt = `R$ ${(parseFloat(t.valor_pago || t.valorPago || 19.90)).toFixed(2)}`;
+            const dateFmt = t.created_at || t.createdAt ? new Date(t.created_at || t.createdAt).toLocaleDateString('pt-BR') : '-';
+            const statusBadge = (t.status === 'PAID')
+              ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PAGO</span>'
+              : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">PENDENTE RESGATE</span>';
+
+            tr.innerHTML = `
+              <td class="py-2.5 px-2.5 font-mono text-[11px] text-slate-700">${t.order_id || t.orderId || '-'}</td>
+              <td class="py-2.5 px-2.5 text-slate-800 font-medium">${t.customer_email || t.customerEmail || '-'}</td>
+              <td class="py-2.5 px-2.5 font-bold text-emerald-600">${valFmt}</td>
+              <td class="py-2.5 px-2.5">${statusBadge}</td>
+              <td class="py-2.5 px-2.5 text-slate-500">${dateFmt}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      }
+
+      this.setupIcons();
+    } catch (err) {
+      console.error('[loadAdminMetrics Error]:', err);
+      this.toast('Erro ao buscar métricas: ' + err.message, 'error');
+    }
+  }
+
   // ================= MODAIS JURÍDICOS (LGPD & TERMOS) =================
   openTermsModal() {
     document.getElementById('legal-title').textContent = 'Termos de Uso e Condições de Serviço';

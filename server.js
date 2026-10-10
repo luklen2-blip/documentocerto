@@ -18,6 +18,7 @@ import planRoutes from './backend/routes/plan_routes.js';
 import dashboardRoutes from './backend/routes/dashboard_routes.js';
 import analysisRoutes from './backend/routes/analysis_routes.js';
 import webhookRoutes from './backend/routes/webhook_routes.js';
+import adminRoutes from './backend/routes/admin_routes.js';
 
 // Database & Seeds
 import {
@@ -106,6 +107,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/analysis', analysisRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/webhook', webhookRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 5. Resolução Resiliente e Universal de Arquivos Estáticos de Frontend
 const staticCandidates = [

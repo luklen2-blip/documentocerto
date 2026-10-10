@@ -969,6 +969,40 @@ async function runAllTests() {
     documentsDb.delete('doc_runall_persist_1');
   });
 
+  // ----------------------------------------------------
+  // TESTE 35: [Analytics & Funil] Endpoint Administrativo GET /api/admin/metrics
+  // ----------------------------------------------------
+  await test('35. [Analytics & Funil] Endpoint Administrativo GET /api/admin/metrics e cálculo do funil...', async () => {
+    // 35.1 - Chamada desprotegida deve retornar 401
+    const unauthRes = await request('/api/admin/metrics');
+    assert.strictEqual(unauthRes.status, 401);
+    assert.strictEqual(unauthRes.data.error.code, 'ADMIN_UNAUTHORIZED');
+
+    // 35.2 - Chamada com x-admin-key válida
+    const adminKey = process.env.ADMIN_KEY || 'documentocerto_admin_migrate_2026';
+    const metricsRes = await request('/api/admin/metrics', {
+      headers: { 'x-admin-key': adminKey }
+    });
+    assert.strictEqual(metricsRes.status, 200);
+    assert.strictEqual(metricsRes.data.success, true);
+
+    const m = metricsRes.data.data;
+    assert.ok(m.funil, 'Deve conter bloco do funil');
+    assert.ok(typeof m.funil.totalCadastros === 'number');
+    assert.ok(typeof m.funil.vitaliciosAtivos === 'number');
+    assert.ok(m.funil.taxaConversao);
+    assert.ok(m.financeiro, 'Deve conter métricas financeiras');
+    assert.ok(typeof m.financeiro.receitaTotalBruta === 'number');
+    assert.ok(Array.isArray(m.ultimasTransacoes));
+
+    // 35.3 - Chamada com Bearer Token de usuário ADMIN (tokenA)
+    const tokenRes = await request('/api/admin/metrics', {
+      headers: { 'Authorization': `Bearer ${tokenA}` }
+    });
+    assert.strictEqual(tokenRes.status, 200);
+    assert.strictEqual(tokenRes.data.success, true);
+  });
+
   // Finalização do servidor de teste
   server.close();
 
