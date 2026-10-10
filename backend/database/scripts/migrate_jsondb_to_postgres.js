@@ -400,18 +400,23 @@ export async function migrateJsonDbToPostgres() {
     for (const we of data.kiwify_webhook_events) {
       await client.query(`
         INSERT INTO kiwify_webhook_events (
-          id, order_id, event_type, payload, status, error, created_at, updated_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          id, event_id, order_id, event_type, status, payload, customer_email,
+          product_id, signature_received, error_message, processed_at, created_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         ON CONFLICT (order_id, event_type) DO NOTHING
       `, [
         we.id,
+        we.eventId || null,
         we.orderId,
         we.eventType,
-        JSON.stringify(we.payload || {}),
         we.status || 'PROCESSED',
-        we.error || null,
-        we.createdAt || new Date().toISOString(),
-        we.updatedAt || new Date().toISOString()
+        JSON.stringify(we.payload || {}),
+        we.customerEmail || null,
+        we.productId || null,
+        we.signatureReceived || null,
+        we.errorMessage || we.error || null,
+        we.processedAt || we.createdAt || new Date().toISOString(),
+        we.createdAt || new Date().toISOString()
       ]);
     }
 
@@ -420,9 +425,10 @@ export async function migrateJsonDbToPostgres() {
       await client.query(`
         INSERT INTO kiwify_transactions (
           id, order_id, order_ref, tenant_id, user_id, customer_email,
-          customer_name, plan, amount_cents, payment_method, status,
-          claim_token, created_at, updated_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+          customer_name, customer_cpf, product_id, product_name, plano_ativado,
+          valor_pago, payment_method, status, claim_token, claimed_at,
+          created_at, updated_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
         ON CONFLICT (order_id) DO UPDATE SET
           status = EXCLUDED.status,
           updated_at = EXCLUDED.updated_at
@@ -434,11 +440,15 @@ export async function migrateJsonDbToPostgres() {
         tx.userId || null,
         tx.customerEmail,
         tx.customerName || null,
-        tx.plan || 'VITALICIO',
-        tx.amountCents || 1990,
+        tx.customerCpf || null,
+        tx.productId || null,
+        tx.productName || null,
+        tx.planoAtivado || tx.plan || 'VITALICIO',
+        tx.valorPago || (tx.amountCents ? tx.amountCents / 100 : 19.90),
         tx.paymentMethod || 'pix',
         tx.status || 'PAID',
         tx.claimToken || null,
+        tx.claimedAt || null,
         tx.createdAt || new Date().toISOString(),
         tx.updatedAt || new Date().toISOString()
       ]);
