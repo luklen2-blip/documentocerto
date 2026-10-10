@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { generatePixPayload, getPixQrCodeUrl } from '../utils/pix_utils.js';
+import { authenticate } from '../middleware/auth_middleware.js';
+import { WebhookController } from '../controllers/webhook_controller.js';
 
 const router = Router();
 
@@ -159,5 +161,8 @@ router.get('/kiwify', (req, res) => {
     }
   });
 });
+
+// Resgate seguro de compra comprovada Kiwify
+router.post('/claim-purchase', authenticate, WebhookController.claimPurchase);
 
 export default router;

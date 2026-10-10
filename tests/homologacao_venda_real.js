@@ -105,13 +105,22 @@ async function runHomologacao() {
     results.push({ item: '2. Catálogo Kiwify & Checkout', status: 'FAIL', detail: err.message });
   }
 
-  // 3. Auditoria de Webhook Kiwify (Verificação de Existência/Implementação)
+  // 3. Auditoria de Webhook Kiwify (Validação de Endpoint Ativo e Segurança)
   try {
-    process.stdout.write('3. [WEBHOOK] Verificando existência de Webhook Kiwify (/api/webhook/kiwify)... ');
-    const res = await request('POST', '/api/webhook/kiwify', { event: 'order_approved' });
-    if (res.status === 404) {
-      console.log(`ℹ️ NÃO IMPLEMENTADO (HTTP 404 - Confirmado: Sem webhook cadastrado)`);
-      results.push({ item: '3. Webhook Kiwify', status: 'NOT_IMPLEMENTED', detail: 'HTTP 404 Not Found - Ausência de webhook confirmada tecnicamente' });
+    process.stdout.write('3. [WEBHOOK] Verificando endpoint de Webhook Kiwify (/api/webhooks/kiwify)... ');
+    const res = await request('POST', '/api/webhooks/kiwify', { order_id: 'audit_test_probe' });
+    if (res.status === 401) {
+      console.log(`✅ ATIVO E PROTEGIDO (HTTP 401 - Autenticação por token obrigatória)`);
+      results.push({ item: '3. Webhook Kiwify', status: 'PASS', detail: 'HTTP 401 Unauthorized - Protegido por token de autenticação' });
+    } else if (res.status === 400) {
+      console.log(`✅ ATIVO E VALIDANDO PAYLOAD (HTTP 400 - Validação de schema ativo)`);
+      results.push({ item: '3. Webhook Kiwify', status: 'PASS', detail: 'HTTP 400 Bad Request - Validação de integridade de payload ativa' });
+    } else if (res.status === 200) {
+      console.log(`✅ ATIVO E RESPONDENDO (HTTP 200)`);
+      results.push({ item: '3. Webhook Kiwify', status: 'PASS', detail: 'HTTP 200 OK' });
+    } else if (res.status === 404) {
+      console.log(`❌ NÃO IMPLEMENTADO (HTTP 404)`);
+      results.push({ item: '3. Webhook Kiwify', status: 'NOT_IMPLEMENTED', detail: 'HTTP 404 Not Found' });
     } else {
       console.log(`Resposta: HTTP ${res.status}`);
       results.push({ item: '3. Webhook Kiwify', status: 'ACTIVE', detail: `HTTP ${res.status}` });

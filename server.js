@@ -17,9 +17,15 @@ import auditRoutes from './backend/routes/audit_routes.js';
 import planRoutes from './backend/routes/plan_routes.js';
 import dashboardRoutes from './backend/routes/dashboard_routes.js';
 import analysisRoutes from './backend/routes/analysis_routes.js';
+import webhookRoutes from './backend/routes/webhook_routes.js';
 
 // Database & Seeds
-import { seedDefaultChecklists } from './backend/database/index.js';
+import {
+  seedDefaultChecklists,
+  checkConnection,
+  isPostgresConfigured,
+  runMigrations
+} from './backend/database/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,13 +43,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(globalLimiter);
 
-// 3. Endpoint MANDATÓRIO de Monitoramento em Nuvem 24/7
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
+// 3. Endpoint MANDATÓRIO de Monitoramento em Nuvem 24/7 com verificação de banco
+app.get('/api/health', async (req, res) => {
+  const dbStatus = await checkConnection();
+  const isProd = process.env.NODE_ENV === 'production';
+  const isDegraded = isProd && !dbStatus.connected;
+
+  res.status(isDegraded ? 503 : 200).json({
+    status: isDegraded ? 'degraded' : 'ok',
     app: process.env.APP_NAME || 'DocumentoCerto',
     version: '2.0.0',
     uptime_seconds: Math.floor(process.uptime()),
+    database: dbStatus,
     timestamp: new Date().toISOString()
   });
 });
@@ -58,6 +69,8 @@ app.use('/api/audit', auditRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/analysis', analysisRoutes);
+app.use('/api/webhooks', webhookRoutes);
+app.use('/api/webhook', webhookRoutes);
 
 // 5. Resolução Resiliente e Universal de Arquivos Estáticos de Frontend
 const staticCandidates = [
@@ -111,17 +124,34 @@ app.get('*', (req, res, next) => {
   next();
 });
 
-// 7. Middleware de Erro Seguro (Sem vazamento de stack traces)
+// 8. Middleware de Erro Seguro (Sem vazamento de stack traces)
 app.use(errorHandler);
 
 // Inicialização do servidor HTTP
 if (process.env.NODE_ENV !== 'test') {
+  // Verificação de segurança obrigatória em produção
+  if (process.env.NODE_ENV === 'production' && !isPostgresConfigured()) {
+    console.error('================================================================');
+    console.error('[FATAL] DATABASE_URL não configurada no ambiente de produção!');
+    console.error('O DocumentoCerto requer PostgreSQL para persistência duradoura.');
+    console.error('================================================================');
+    process.exit(1);
+  }
+
+  // Executa migrações pendentes se o PostgreSQL estiver configurado
+  if (isPostgresConfigured()) {
+    runMigrations().catch(err => {
+      console.error('[Migrations Erro ao Inicializar]:', err.message);
+    });
+  }
+
   app.listen(PORT, () => {
     console.log(`==================================================`);
     console.log(`🚀 DocumentoCerto rodando com sucesso na porta ${PORT}`);
     console.log(`🔗 Local: http://localhost:${PORT}`);
     console.log(`🩺 Health check: http://localhost:${PORT}/api/health`);
     console.log(`🔒 Modo Multi-Tenant e Armazenamento Privado Ativos`);
+    console.log(`📦 Banco: ${isPostgresConfigured() ? 'PostgreSQL Ativo' : 'JsonDB (Modo Local/Compat)'}`);
     console.log(`==================================================`);
   });
 }

@@ -1,18 +1,24 @@
-import { JsonDB } from './json_db.js';
+import { PgRepository } from './repositories.js';
+export { query, withTransaction, isPostgresConfigured, checkConnection, closePgPool } from './pg_pool.js';
+export { runMigrations } from './migration_runner.js';
 
-export const organizationsDb = new JsonDB('organizations');
-export const usersDb = new JsonDB('users');
-export const checklistsDb = new JsonDB('checklists');
-export const processesDb = new JsonDB('processes');
-export const documentsDb = new JsonDB('documents');
-export const auditDb = new JsonDB('audit_logs');
+export const organizationsDb = new PgRepository('organizations');
+export const usersDb = new PgRepository('users');
+export const checklistsDb = new PgRepository('checklists');
+export const processesDb = new PgRepository('processes');
+export const documentsDb = new PgRepository('documents');
+export const auditDb = new PgRepository('audit_logs');
 
 // Coleções da Fase 2 (Conferência Inteligente & OCR)
-export const analysisJobsDb = new JsonDB('analysis_jobs');
-export const extractedTextDb = new JsonDB('extracted_text');
-export const extractedFieldsDb = new JsonDB('extracted_fields');
-export const findingsDb = new JsonDB('findings');
-export const aiAnalysisDb = new JsonDB('ai_analysis');
+export const analysisJobsDb = new PgRepository('analysis_jobs');
+export const extractedTextDb = new PgRepository('extracted_text');
+export const extractedFieldsDb = new PgRepository('extracted_fields');
+export const findingsDb = new PgRepository('findings');
+export const aiAnalysisDb = new PgRepository('ai_analysis');
+
+// Coleções da Fase 3 (Comercial, Webhooks e Transações Kiwify)
+export const kiwifyWebhookEventsDb = new PgRepository('kiwify_webhook_events');
+export const kiwifyTransactionsDb = new PgRepository('kiwify_transactions');
 
 // Inicializa modelos padrão de checklist se o banco estiver vazio
 export function seedDefaultChecklists() {

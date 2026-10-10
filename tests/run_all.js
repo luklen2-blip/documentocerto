@@ -11,6 +11,7 @@ import { ValidationEngine, SEVERITY, CLASSIFICATION } from '../backend/services/
 import { AIAnalysisProvider } from '../backend/services/ai_analysis_provider.js';
 import { MockOCRProvider } from '../backend/ocr/mock_ocr_provider.js';
 import { setOCRProvider } from '../backend/ocr/index.js';
+import { organizationsDb } from '../backend/database/index.js';
 
 console.log('====================================================');
 console.log('🧪 INICIANDO SUÍTE DE TESTES AUTOMATIZADOS: DOCUMENTOCERTO');
@@ -835,6 +836,88 @@ async function runAllTests() {
     assert.ok(privRes.raw.includes('Política de Privacidade'));
     assert.ok(privRes.raw.includes('LGPD'));
     assert.ok(privRes.raw.includes('Lei 13.709/2018'));
+  });
+
+  // ----------------------------------------------------
+  // TESTE 30: [Fase 3] Webhook Kiwify: Defesa de Autenticação (HTTP 401)
+  // ----------------------------------------------------
+  await test('30. [Fase 3] Webhook Kiwify: Rejeição de chamada sem token válido (HTTP 401)...', async () => {
+    process.env.KIWIFY_WEBHOOK_TOKEN = 'secret_test_token_2026';
+    const res = await request('/api/webhooks/kiwify', {
+      method: 'POST',
+      body: { order_id: 'fake_123', order_status: 'paid' }
+    });
+    assert.strictEqual(res.status, 401);
+    assert.strictEqual(res.data.error.code, 'UNAUTHORIZED_WEBHOOK');
+  });
+
+  // ----------------------------------------------------
+  // TESTE 31: [Fase 3] Webhook Kiwify: Ativação Automática de Pagamento Aprovado
+  // ----------------------------------------------------
+  const kwOrderId = `kw_runall_${Date.now()}`;
+  await test('31. [Fase 3] Webhook Kiwify: Pagamento aprovado ativa plano VITALICIO...', async () => {
+    process.env.KIWIFY_WEBHOOK_TOKEN = 'secret_test_token_2026';
+    const res = await request('/api/webhooks/kiwify?token=secret_test_token_2026', {
+      method: 'POST',
+      body: {
+        order_id: kwOrderId,
+        order_status: 'paid',
+        Product: { product_name: 'DocumentoCerto Plano Vitalício' },
+        Customer: { email: userA.email, full_name: userA.nome }
+      }
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.data.success, true);
+    assert.strictEqual(res.data.data.plano, 'VITALICIO');
+
+    const orgA = organizationsDb.findById(tenantA.id);
+    assert.strictEqual(orgA.plano, 'VITALICIO');
+  });
+
+  // ----------------------------------------------------
+  // TESTE 32: [Fase 3] Webhook Kiwify: Idempotência Comprovada (Reenvio)
+  // ----------------------------------------------------
+  await test('32. [Fase 3] Webhook Kiwify: Idempotência confirmada contra reenvio de evento...', async () => {
+    const res = await request('/api/webhooks/kiwify?token=secret_test_token_2026', {
+      method: 'POST',
+      body: {
+        order_id: kwOrderId,
+        order_status: 'paid',
+        Customer: { email: userA.email }
+      }
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.data.idempotente, true);
+  });
+
+  // ----------------------------------------------------
+  // TESTE 33: [Fase 3] Resgate de Compra (/api/plans/claim-purchase)
+  // ----------------------------------------------------
+  await test('33. [Fase 3] Resgate seguro de compra comprovada Kiwify...', async () => {
+    const unclaimedId = `kw_unclaimed_runall_${Date.now()}`;
+    const whRes = await request('/api/webhooks/kiwify?token=secret_test_token_2026', {
+      method: 'POST',
+      body: {
+        order_id: unclaimedId,
+        order_status: 'paid',
+        Customer: { email: 'cliente_desconhecido@teste.com' }
+      }
+    });
+    assert.strictEqual(whRes.status, 200);
+    const token = whRes.data.data.claim_token;
+    assert.ok(token);
+
+    // Resgate com login do Tenant B
+    const claimRes = await request('/api/plans/claim-purchase', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${tokenB}` },
+      body: { claimToken: token }
+    });
+    assert.strictEqual(claimRes.status, 200);
+    assert.strictEqual(claimRes.data.data.plano, 'VITALICIO');
+
+    const orgB = organizationsDb.findById(tenantB.id);
+    assert.strictEqual(orgB.plano, 'VITALICIO');
   });
 
   // Finalização do servidor de teste
