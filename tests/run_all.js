@@ -920,6 +920,55 @@ async function runAllTests() {
     assert.strictEqual(orgB.plano, 'VITALICIO');
   });
 
+  // ----------------------------------------------------
+  // TESTE 34: [Persistência] Auto-Reidratação de Documentos Pós-Deleção Efêmera
+  // ----------------------------------------------------
+  await test('34. [Persistência] Auto-Reidratação transparente e integridade SHA-256...', async () => {
+    const { StorageService } = await import('../backend/services/storage_service.js');
+    const { documentsDb } = await import('../backend/database/index.js');
+    const crypto = (await import('crypto')).default;
+    const fs = (await import('fs')).default;
+
+    const sampleBuf = Buffer.from('%PDF-1.4 TESTE DE PERSISTENCIA RUN_ALL', 'utf-8');
+    const sampleSha = crypto.createHash('sha256').update(sampleBuf).digest('hex');
+
+    const saved = await StorageService.saveFile({
+      documentId: 'doc_runall_persist_1',
+      tenantId: tenantA.id,
+      buffer: sampleBuf,
+      mimeType: 'application/pdf',
+      originalName: 'teste_persist.pdf',
+      relativePath: `storage/private/${tenantA.id}/proc_runall/teste_persist.pdf`
+    });
+
+    documentsDb.insert({
+      id: 'doc_runall_persist_1',
+      tenantId: tenantA.id,
+      processId: processA.id,
+      itemId: 'item_adm_1',
+      originalName: 'teste_persist.pdf',
+      mimeType: 'application/pdf',
+      sizeBytes: sampleBuf.length,
+      storagePath: saved.relativePath,
+      sha256: sampleSha
+    });
+
+    // Simula remoção do disco efêmero
+    const localP = StorageService.resolveLocalPath(saved.relativePath);
+    if (fs.existsSync(localP)) fs.unlinkSync(localP);
+    assert.strictEqual(fs.existsSync(localP), false);
+
+    // Recupera via getFileBuffer (reidratação)
+    const rehydrated = await StorageService.getFileBuffer('doc_runall_persist_1', tenantA.id);
+    assert.ok(rehydrated);
+    assert.strictEqual(rehydrated.sha256, sampleSha);
+    assert.ok(fs.existsSync(localP), 'Deve recriar arquivo físico em disco');
+
+    // Limpeza
+    await StorageService.deleteFile('doc_runall_persist_1', tenantA.id);
+    documentsDb.delete('doc_runall_persist_1');
+  });
+
   // Finalização do servidor de teste
   server.close();
 

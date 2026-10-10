@@ -139,7 +139,7 @@ export async function checkConnection() {
 
     let recordCounts = {};
     try {
-      for (const t of ['organizations', 'users', 'processes', 'checklists', 'documents']) {
+      for (const t of ['organizations', 'users', 'processes', 'checklists', 'documents', 'document_blobs']) {
         if (tables.includes(t)) {
           const cRes = await query(`SELECT count(*)::int AS count FROM ${t}`);
           recordCounts[t] = cRes.rows[0].count;

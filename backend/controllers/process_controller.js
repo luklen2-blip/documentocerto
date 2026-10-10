@@ -1,6 +1,7 @@
 import { processesDb, checklistsDb, documentsDb, organizationsDb } from '../database/index.js';
 import { StatusService, STATUS_TYPES } from '../services/status_service.js';
 import { AuditService } from '../services/audit_service.js';
+import { StorageService } from '../services/storage_service.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -322,15 +323,13 @@ export class ProcessController {
         });
       }
 
-      // Exclui documentos físicos e registros no banco
+      // Exclui documentos físicos, blobs persistentes e registros no banco
       const docs = documentsDb.findAll(d => d.processId === id && d.tenantId === req.user.tenantId);
       for (const d of docs) {
         try {
-          if (fs.existsSync(d.storagePath)) {
-            fs.unlinkSync(d.storagePath);
-          }
+          await StorageService.deleteFile(d.id, req.user.tenantId);
         } catch (e) {
-          console.warn('[ProcessController.delete] Erro ao excluir arquivo físico:', e.message);
+          console.warn('[ProcessController.delete] Erro ao excluir arquivo físico/blob:', e.message);
         }
         documentsDb.delete(d.id);
       }

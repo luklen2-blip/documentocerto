@@ -13,6 +13,7 @@ import { ExtractionService } from './extraction_service.js';
 import { ValidationEngine, CLASSIFICATION } from './validation_engine.js';
 import { AIAnalysisProvider } from './ai_analysis_provider.js';
 import { AuditService } from './audit_service.js';
+import { StorageService } from './storage_service.js';
 
 export class AnalysisJobService {
   /**
@@ -95,7 +96,8 @@ export class AnalysisJobService {
 
       let ocrRes;
       try {
-        ocrRes = await ocrProvider.extractText(doc.storagePath, doc.mimeType);
+        const localFilePath = (await StorageService.ensureLocalFile(doc.id, tenantId)) || StorageService.resolveLocalPath(doc.storagePath);
+        ocrRes = await ocrProvider.extractText(localFilePath, doc.mimeType);
       } catch (err) {
         ocrRes = {
           success: false,

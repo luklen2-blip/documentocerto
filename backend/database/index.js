@@ -3,12 +3,14 @@ import { isPostgresConfigured } from './pg_pool.js';
 export { query, withTransaction, isPostgresConfigured, checkConnection, closePgPool } from './pg_pool.js';
 export { runMigrations } from './migration_runner.js';
 export { migrateJsonDbToPostgres } from './scripts/migrate_jsondb_to_postgres.js';
+export { migrateFilesToStorage } from './scripts/migrate_files_to_storage.js';
 
 export const organizationsDb = new PgRepository('organizations');
 export const usersDb = new PgRepository('users');
 export const checklistsDb = new PgRepository('checklists');
 export const processesDb = new PgRepository('processes');
 export const documentsDb = new PgRepository('documents');
+export const documentBlobsDb = new PgRepository('document_blobs');
 export const auditDb = new PgRepository('audit_logs');
 
 // Coleções da Fase 2 (Conferência Inteligente & OCR)

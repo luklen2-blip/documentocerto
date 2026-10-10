@@ -1,6 +1,7 @@
 import { documentsDb, processesDb } from '../database/index.js';
 import { StatusService } from '../services/status_service.js';
 import { AuditService } from '../services/audit_service.js';
+import { StorageService } from '../services/storage_service.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -55,16 +56,20 @@ export class DocumentController {
       const isSubstituicao = Boolean(itens[itemIndex].documentoId);
       const oldDocId = itens[itemIndex].documentoId;
 
-      // Se for substituição, remove o documento anterior
+      // Se for substituição, remove o documento anterior e seu blob persistente
       if (isSubstituicao && oldDocId) {
         const oldDoc = documentsDb.findById(oldDocId);
         if (oldDoc && oldDoc.tenantId === req.user.tenantId) {
           try {
-            if (fs.existsSync(oldDoc.storagePath)) fs.unlinkSync(oldDoc.storagePath);
+            await StorageService.deleteFile(oldDocId, req.user.tenantId);
           } catch {}
           documentsDb.delete(oldDocId);
         }
       }
+
+      // Lê os bytes do arquivo para armazenamento seguro
+      const fileBuffer = fs.readFileSync(req.file.path);
+      const relativeStoragePath = StorageService.toRelativeStoragePath(req.file.path);
 
       // Registra o novo documento
       const doc = documentsDb.insert({
@@ -75,9 +80,26 @@ export class DocumentController {
         storedFilename: req.file.filename,
         mimeType: req.file.mimetype,
         sizeBytes: req.file.size,
-        storagePath: req.file.path,
+        storagePath: relativeStoragePath,
         uploadedBy: req.user.id,
         uploadedByName: req.user.nome
+      });
+
+      // Persistência em alta durabilidade via StorageService (PostgreSQL BYTEA + SHA-256)
+      const savedStorage = await StorageService.saveFile({
+        documentId: doc.id,
+        tenantId: req.user.tenantId,
+        buffer: fileBuffer,
+        mimeType: req.file.mimetype,
+        originalName: req.file.originalname,
+        relativePath: relativeStoragePath
+      });
+
+      doc.sha256 = savedStorage.sha256;
+      doc.storagePath = savedStorage.relativePath;
+      documentsDb.update(doc.id, {
+        sha256: savedStorage.sha256,
+        storagePath: savedStorage.relativePath
       });
 
       // Atualiza o item do processo
@@ -161,20 +183,30 @@ export class DocumentController {
         });
       }
 
-      if (!fs.existsSync(doc.storagePath)) {
+      // Recupera via StorageService com auto-reidratação resiliente
+      const fileResult = await StorageService.getFileStream(id, req.user.tenantId);
+      if (!fileResult || !fileResult.stream) {
         return res.status(404).json({
           success: false,
-          error: { code: 'FILE_MISSING_ON_DISK', message: 'O arquivo físico não foi encontrado no servidor.' }
+          error: { code: 'FILE_MISSING_ON_DISK', message: 'O arquivo físico não foi encontrado no armazenamento.' }
         });
       }
 
-      res.setHeader('Content-Type', doc.mimeType);
-      res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(doc.originalName)}"`);
+      res.setHeader('Content-Type', fileResult.doc.mimeType || doc.mimeType || 'application/octet-stream');
+      res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(fileResult.doc.originalName || doc.originalName)}"`);
       res.setHeader('X-Content-Type-Options', 'nosniff');
+      if (fileResult.doc.sha256 || doc.sha256) {
+        res.setHeader('ETag', `"${fileResult.doc.sha256 || doc.sha256}"`);
+      }
 
-      const stream = fs.createReadStream(doc.storagePath);
-      stream.pipe(res);
+      fileResult.stream.pipe(res);
     } catch (err) {
+      if (err.code === 'CROSS_TENANT_ACCESS_DENIED') {
+        return res.status(403).json({
+          success: false,
+          error: { code: 'CROSS_TENANT_ACCESS_DENIED', message: err.message }
+        });
+      }
       console.error('[DocumentController.getFile]:', err);
       return res.status(500).json({
         success: false,
@@ -211,9 +243,9 @@ export class DocumentController {
         });
       }
 
-      // Remove arquivo físico
+      // Remove arquivo físico e blob persistente via StorageService
       try {
-        if (fs.existsSync(doc.storagePath)) fs.unlinkSync(doc.storagePath);
+        await StorageService.deleteFile(id, req.user.tenantId);
       } catch (e) {
         console.warn('[DocumentController.delete] Aviso ao remover arquivo:', e.message);
       }

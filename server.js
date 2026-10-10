@@ -26,6 +26,7 @@ import {
   isPostgresConfigured,
   runMigrations,
   migrateJsonDbToPostgres,
+  migrateFilesToStorage,
   syncAllRepositoriesFromPg
 } from './backend/database/index.js';
 
@@ -71,11 +72,13 @@ app.all(['/api/admin/migrate-data', '/api/admin/reconciliation'], async (req, re
     }
 
     const result = await migrateJsonDbToPostgres();
+    const filesResult = await migrateFilesToStorage();
     const syncedCount = await syncAllRepositoriesFromPg();
     return res.status(200).json({
       success: true,
-      message: 'Migração e reconciliação executadas com sucesso.',
+      message: 'Migração, persistência de arquivos e reconciliação executadas com sucesso.',
       migration: result,
+      filesMigration: filesResult,
       syncedRepositoriesRecords: syncedCount
     });
   } catch (err) {
@@ -169,6 +172,12 @@ if (process.env.NODE_ENV !== 'test') {
       .then(res => {
         if (res && res.success) {
           console.log(`[Data Migration]: ✅ Reconciliados ${res.totalRecordsJson} registros com sucesso no PostgreSQL!`);
+        }
+        return migrateFilesToStorage();
+      })
+      .then(filesRes => {
+        if (filesRes && filesRes.success) {
+          console.log(`[Storage Migration]: ✅ ${filesRes.ingested} blobs ingeridos, ${filesRes.normalized} caminhos normalizados.`);
         }
         return syncAllRepositoriesFromPg();
       })
