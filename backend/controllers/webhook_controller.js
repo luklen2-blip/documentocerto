@@ -12,12 +12,7 @@ export class WebhookController {
    * Valida a autenticidade da notificação Kiwify
    */
   static validateAuthentication(req) {
-    const configuredToken = process.env.KIWIFY_WEBHOOK_TOKEN;
-    if (!configuredToken) {
-      // Se não há token configurado no ambiente, permite processamento com aviso em log
-      console.warn('[Kiwify Webhook Warning]: KIWIFY_WEBHOOK_TOKEN não configurado no ambiente.');
-      return { valid: true };
-    }
+    const configuredToken = process.env.KIWIFY_WEBHOOK_TOKEN || 'kiwify_webhook_prod_token_2026';
 
     // 1. Token via Query Param (?token=...)
     const queryToken = req.query.token;
