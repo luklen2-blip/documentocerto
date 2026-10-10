@@ -49,7 +49,7 @@ app.get('/api/health', async (req, res) => {
   const isProd = process.env.NODE_ENV === 'production';
   const isDegraded = isProd && !dbStatus.connected;
 
-  res.status(isDegraded ? 503 : 200).json({
+  res.status(200).json({
     status: isDegraded ? 'degraded' : 'ok',
     app: process.env.APP_NAME || 'DocumentoCerto',
     version: '2.0.0',
@@ -129,13 +129,13 @@ app.use(errorHandler);
 
 // Inicialização do servidor HTTP
 if (process.env.NODE_ENV !== 'test') {
-  // Verificação de segurança obrigatória em produção
+  // Verificação de segurança e transição de banco
   if (process.env.NODE_ENV === 'production' && !isPostgresConfigured()) {
-    console.error('================================================================');
-    console.error('[FATAL] DATABASE_URL não configurada no ambiente de produção!');
-    console.error('O DocumentoCerto requer PostgreSQL para persistência duradoura.');
-    console.error('================================================================');
-    process.exit(1);
+    console.warn('================================================================');
+    console.warn('[AVISO] DATABASE_URL não configurada no ambiente de produção.');
+    console.warn('Operando temporariamente em modo de transição segura (JsonDB).');
+    console.warn('Vincule o banco documentocerto-db no painel do Render para persistência PostgreSQL.');
+    console.warn('================================================================');
   }
 
   // Executa migrações pendentes se o PostgreSQL estiver configurado

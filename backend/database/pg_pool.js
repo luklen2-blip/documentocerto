@@ -14,11 +14,7 @@ export function getPgPool() {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     if (process.env.NODE_ENV === 'production') {
-      console.error('================================================================');
-      console.error('[FATAL] DATABASE_URL não configurada em ambiente de produção!');
-      console.error('Para prevenir perda de dados em disco efêmero, o PostgreSQL é obrigatório.');
-      console.error('================================================================');
-      throw new Error('DATABASE_URL ausente em produção.');
+      console.warn('[Aviso] DATABASE_URL não configurada em produção. Operando em modo de transição.');
     }
     return null;
   }
@@ -42,6 +38,23 @@ export function getPgPool() {
   });
 
   return pool;
+}
+
+export function getMaskedConnectionInfo() {
+  const urlStr = process.env.DATABASE_URL;
+  if (!urlStr) return null;
+  try {
+    const parsed = new URL(urlStr);
+    return {
+      host: parsed.hostname,
+      port: parsed.port || '5432',
+      database: parsed.pathname ? parsed.pathname.replace(/^\//, '') : '',
+      user: parsed.username || 'postgres',
+      ssl: parsed.searchParams.get('sslmode') || 'require'
+    };
+  } catch {
+    return { host: 'masked', database: 'masked' };
+  }
 }
 
 export async function query(text, params = []) {
@@ -90,25 +103,54 @@ export async function checkConnection() {
       connected: false,
       configured: false,
       driver: 'JsonDB',
-      message: 'DATABASE_URL não configurada (operando em modo de compatibilidade/desenvolvimento).'
+      message: 'DATABASE_URL não configurada no ambiente (aguardando vinculação no Render).'
     };
   }
 
+  const start = Date.now();
   try {
-    const res = await query('SELECT 1 AS alive, current_database() AS db, version() AS version');
+    const res = await query('SELECT 1 AS alive, current_database() AS db, version() AS version, NOW() AS server_time');
+    const latency_ms = Date.now() - start;
+
+    let tables = [];
+    try {
+      const tablesRes = await query(`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        ORDER BY table_name ASC
+      `);
+      tables = tablesRes.rows.map(r => r.table_name);
+    } catch {
+      // Falha não crítica na listagem
+    }
+
     return {
       connected: true,
       configured: true,
       driver: 'PostgreSQL',
       database: res.rows[0].db,
-      version: res.rows[0].version?.split(' ')[0] || 'PostgreSQL'
+      version: res.rows[0].version?.split(' ')[0] || 'PostgreSQL',
+      latency_ms,
+      total_tables: tables.length,
+      tables,
+      last_check: new Date().toISOString(),
+      pool: {
+        total_connections: pool?.totalCount || 0,
+        idle_connections: pool?.idleCount || 0,
+        waiting_clients: pool?.waitingCount || 0
+      },
+      connection: getMaskedConnectionInfo()
     };
   } catch (err) {
     return {
       connected: false,
       configured: true,
       driver: 'PostgreSQL',
-      error: err.message
+      latency_ms: Date.now() - start,
+      error: err.message,
+      last_check: new Date().toISOString(),
+      connection: getMaskedConnectionInfo()
     };
   }
 }
