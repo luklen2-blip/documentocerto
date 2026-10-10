@@ -61,6 +61,28 @@ app.get('/api/health', async (req, res) => {
   });
 });
 
+// 3.1 Endpoint Administrativo para Execução e Auditoria de Migração de Dados
+app.all(['/api/admin/migrate-data', '/api/admin/reconciliation'], async (req, res) => {
+  try {
+    const adminKey = req.headers['x-admin-key'] || req.query.key;
+    const expectedKey = process.env.ADMIN_KEY || 'documentocerto_admin_migrate_2026';
+    if (adminKey !== expectedKey) {
+      return res.status(401).json({ success: false, error: 'Chave de administração inválida.' });
+    }
+
+    const result = await migrateJsonDbToPostgres();
+    const syncedCount = await syncAllRepositoriesFromPg();
+    return res.status(200).json({
+      success: true,
+      message: 'Migração e reconciliação executadas com sucesso.',
+      migration: result,
+      syncedRepositoriesRecords: syncedCount
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // 4. Registro dos Módulos da API REST
 app.use('/api/auth', authRoutes);
 app.use('/api/tenants', tenantRoutes);
