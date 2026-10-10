@@ -66,9 +66,17 @@ app.get('/api/health', async (req, res) => {
 app.all(['/api/admin/migrate-data', '/api/admin/reconciliation'], async (req, res) => {
   try {
     const adminKey = req.headers['x-admin-key'] || req.query.key;
+    const isProd = process.env.NODE_ENV === 'production';
+    if (isProd && !process.env.ADMIN_KEY) {
+      return res.status(503).json({
+        success: false,
+        error: 'Endpoint administrativo desativado em produção: defina ADMIN_KEY nas variáveis de ambiente.'
+      });
+    }
+
     const expectedKey = process.env.ADMIN_KEY || 'documentocerto_admin_migrate_2026';
-    if (adminKey !== expectedKey) {
-      return res.status(401).json({ success: false, error: 'Chave de administração inválida.' });
+    if (!adminKey || adminKey !== expectedKey) {
+      return res.status(401).json({ success: false, error: 'Chave de administração inválida ou ausente.' });
     }
 
     const result = await migrateJsonDbToPostgres();

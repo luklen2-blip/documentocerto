@@ -111,6 +111,7 @@ export class StorageService {
         );
       } catch (err) {
         console.error(`[StorageService.saveFile] Erro ao persistir blob no PostgreSQL: ${err.message}`);
+        throw new Error(`Falha na persistência obrigatória do arquivo no PostgreSQL: ${err.message}`);
       }
     }
 

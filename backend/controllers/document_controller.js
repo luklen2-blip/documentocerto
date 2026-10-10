@@ -71,8 +71,8 @@ export class DocumentController {
       const fileBuffer = fs.readFileSync(req.file.path);
       const relativeStoragePath = StorageService.toRelativeStoragePath(req.file.path);
 
-      // Registra o novo documento
-      const doc = documentsDb.insert({
+      // Registra o novo documento garantindo commit no PostgreSQL
+      const doc = await documentsDb.insertAsync({
         tenantId: req.user.tenantId,
         processId,
         itemId,
@@ -85,22 +85,29 @@ export class DocumentController {
         uploadedByName: req.user.nome
       });
 
-      // Persistência em alta durabilidade via StorageService (PostgreSQL BYTEA + SHA-256)
-      const savedStorage = await StorageService.saveFile({
-        documentId: doc.id,
-        tenantId: req.user.tenantId,
-        buffer: fileBuffer,
-        mimeType: req.file.mimetype,
-        originalName: req.file.originalname,
-        relativePath: relativeStoragePath
-      });
+      let savedStorage;
+      try {
+        // Persistência em alta durabilidade via StorageService (PostgreSQL BYTEA + SHA-256)
+        savedStorage = await StorageService.saveFile({
+          documentId: doc.id,
+          tenantId: req.user.tenantId,
+          buffer: fileBuffer,
+          mimeType: req.file.mimetype,
+          originalName: req.file.originalname,
+          relativePath: relativeStoragePath
+        });
 
-      doc.sha256 = savedStorage.sha256;
-      doc.storagePath = savedStorage.relativePath;
-      documentsDb.update(doc.id, {
-        sha256: savedStorage.sha256,
-        storagePath: savedStorage.relativePath
-      });
+        doc.sha256 = savedStorage.sha256;
+        doc.storagePath = savedStorage.relativePath;
+        await documentsDb.updateAsync(doc.id, {
+          sha256: savedStorage.sha256,
+          storagePath: savedStorage.relativePath
+        });
+      } catch (storageErr) {
+        // Atomicidade: remove metadado caso a gravação do blob falhe
+        try { await documentsDb.deleteAsync(doc.id); } catch {}
+        throw storageErr;
+      }
 
       // Atualiza o item do processo
       itens[itemIndex].documentoId = doc.id;
