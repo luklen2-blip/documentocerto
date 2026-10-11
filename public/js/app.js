@@ -1282,8 +1282,30 @@ class DocumentoCertoApp {
 
   async loadAdminMetrics() {
     try {
-      const res = await this.api('/api/admin/metrics');
+      // 1. Recupera chave administrativa mestra de sessão
+      let adminKey = sessionStorage.getItem('dc_platform_admin_key');
+      if (!adminKey) {
+        adminKey = window.prompt('Gestão da Plataforma DocumentoCerto\nInforme a chave mestra de operador (x-admin-key):');
+        if (!adminKey || !adminKey.trim()) {
+          this.closeModal('modal-admin-metrics');
+          this.toast('Acesso cancelado: chave de operador da plataforma necessária.', 'info');
+          return;
+        }
+        sessionStorage.setItem('dc_platform_admin_key', adminKey.trim());
+      }
+
+      // 2. Consulta a API passando o cabeçalho seguro x-admin-key
+      const res = await this.api('/api/admin/metrics', {
+        headers: { 'x-admin-key': adminKey.trim() }
+      });
+
       if (!res.success) {
+        if (res.error?.code === 'PLATFORM_KEY_REQUIRED' || res.error?.code === 'ADMIN_UNAUTHORIZED') {
+          sessionStorage.removeItem('dc_platform_admin_key');
+          this.toast('Chave de operador inválida ou não autorizada.', 'error');
+          this.closeModal('modal-admin-metrics');
+          return;
+        }
         this.toast(res.error?.message || 'Falha ao carregar métricas administrativas.', 'error');
         return;
       }
@@ -1354,9 +1376,15 @@ class DocumentoCertoApp {
             tr.className = 'border-b border-slate-100 hover:bg-slate-50 transition';
             const valFmt = `R$ ${(parseFloat(t.valor_pago || t.valorPago || 19.90)).toFixed(2)}`;
             const dateFmt = t.created_at || t.createdAt ? new Date(t.created_at || t.createdAt).toLocaleDateString('pt-BR') : '-';
-            const statusBadge = (t.status === 'PAID')
-              ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PAGO</span>'
-              : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">PENDENTE RESGATE</span>';
+
+            let statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">OUTRO</span>';
+            if (t.status === 'PAID') {
+              statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">PAGO</span>';
+            } else if (t.status === 'PAID_PENDING_CLAIM') {
+              statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">PENDENTE RESGATE</span>';
+            } else if (t.status === 'REFUNDED' || t.status === 'CHARGEDBACK') {
+              statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">ESTORNADO</span>';
+            }
 
             tr.innerHTML = `
               <td class="py-2.5 px-2.5 font-mono text-[11px] text-slate-700">${t.order_id || t.orderId || '-'}</td>

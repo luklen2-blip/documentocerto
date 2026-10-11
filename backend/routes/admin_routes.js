@@ -11,40 +11,59 @@ import { verifyToken } from '../utils/crypto_utils.js';
 const router = Router();
 
 /**
- * Middleware de proteção administrativa:
- * Autoriza acesso via chave de cabeçalho x-admin-key (ou query param ?key=)
- * OU via Bearer Token de um usuário administrador autenticado.
+ * Middleware de proteção administrativa de plataforma:
+ * - Exige estritamente o cabeçalho x-admin-key correspondente a ADMIN_KEY.
+ * - Rejeita passagem de chaves via query string (?key=) por ser uma má prática OWASP de exposição em logs.
+ * - Impede que administradores de tenants comuns (clientes) acessem métricas globais de faturamento
+ *   e transações de outros clientes da plataforma.
+ * - Em produção (NODE_ENV === 'production'), exige que ADMIN_KEY esteja explicitamente configurada.
  */
 function requireAdminAuth(req, res, next) {
-  const adminKey = req.headers['x-admin-key'] || req.query.key;
   const expectedKey = process.env.ADMIN_KEY || 'documentocerto_admin_migrate_2026';
+  const adminKeyHeader = req.headers['x-admin-key'];
 
-  // 1. Verificação via chave administrativa mestra
-  if (adminKey && adminKey === expectedKey) {
+  // 1. Verificação via chave de cabeçalho x-admin-key
+  if (adminKeyHeader && adminKeyHeader === expectedKey) {
     req.isAdminMaster = true;
     return next();
   }
 
-  // 2. Verificação via Token JWT de Usuário com papel ADMIN
+  // 2. Verificação de tentativas com Bearer Token de usuários comuns ou tenant admins
   const authHeader = req.headers['authorization'];
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.slice(7).trim();
     const payload = verifyToken(token);
     if (payload && payload.userId) {
       const user = usersDb.findById(payload.userId);
-      if (user && user.ativo && user.papel === 'ADMIN') {
-        req.user = user;
-        req.tenantId = user.tenantId;
-        return next();
+      if (user && user.ativo) {
+        if (user.papel === 'MEMBRO') {
+          return res.status(403).json({
+            success: false,
+            error: {
+              code: 'FORBIDDEN_ROLE',
+              message: 'Acesso negado: usuários com papel MEMBRO não possuem permissão para painel de gestão.'
+            }
+          });
+        }
+
+        // Usuário é ADMIN de seu próprio tenant, mas rotas de plataforma exigem a chave do operador
+        return res.status(403).json({
+          success: false,
+          error: {
+            code: 'PLATFORM_KEY_REQUIRED',
+            message: 'Acesso restrito ao operador da plataforma DocumentoCerto. Forneça o cabeçalho x-admin-key de gestão.'
+          }
+        });
       }
     }
   }
 
+  // 3. Sem autenticação ou credenciais inválidas
   return res.status(401).json({
     success: false,
     error: {
       code: 'ADMIN_UNAUTHORIZED',
-      message: 'Acesso restrito: forneça x-admin-key válida ou autentique-se como Administrador.'
+      message: 'Acesso restrito: forneça o cabeçalho x-admin-key com a chave de operador autorizada.'
     }
   });
 }
@@ -63,9 +82,10 @@ router.get('/metrics', requireAdminAuth, async (req, res) => {
     });
   } catch (err) {
     console.error('[Admin Metrics Error]:', err);
+    const isProd = process.env.NODE_ENV === 'production';
     return res.status(500).json({
       success: false,
-      error: { code: 'METRICS_ERROR', message: err.message }
+      error: { code: 'METRICS_ERROR', message: isProd ? 'Falha ao computar métricas da plataforma.' : err.message }
     });
   }
 });

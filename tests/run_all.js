@@ -978,7 +978,18 @@ async function runAllTests() {
     assert.strictEqual(unauthRes.status, 401);
     assert.strictEqual(unauthRes.data.error.code, 'ADMIN_UNAUTHORIZED');
 
-    // 35.2 - Chamada com x-admin-key válida
+    // 35.2 - Tentativa via query param ?key= (bloqueada: HTTP 401)
+    const queryParamRes = await request('/api/admin/metrics?key=documentocerto_admin_migrate_2026');
+    assert.strictEqual(queryParamRes.status, 401);
+
+    // 35.3 - Tenant Admin comum sem x-admin-key (bloqueado com HTTP 403 PLATFORM_KEY_REQUIRED)
+    const tenantAdminRes = await request('/api/admin/metrics', {
+      headers: { 'Authorization': `Bearer ${tokenA}` }
+    });
+    assert.strictEqual(tenantAdminRes.status, 403);
+    assert.strictEqual(tenantAdminRes.data.error.code, 'PLATFORM_KEY_REQUIRED');
+
+    // 35.4 - Chamada com x-admin-key válida pelo Operador de Plataforma (HTTP 200 OK)
     const adminKey = process.env.ADMIN_KEY || 'documentocerto_admin_migrate_2026';
     const metricsRes = await request('/api/admin/metrics', {
       headers: { 'x-admin-key': adminKey }
@@ -993,14 +1004,29 @@ async function runAllTests() {
     assert.ok(m.funil.taxaConversao);
     assert.ok(m.financeiro, 'Deve conter métricas financeiras');
     assert.ok(typeof m.financeiro.receitaTotalBruta === 'number');
+    assert.ok(typeof m.financeiro.receitaLiquida === 'number');
     assert.ok(Array.isArray(m.ultimasTransacoes));
+  });
 
-    // 35.3 - Chamada com Bearer Token de usuário ADMIN (tokenA)
-    const tokenRes = await request('/api/admin/metrics', {
-      headers: { 'Authorization': `Bearer ${tokenA}` }
+  // ----------------------------------------------------
+  // TESTE 36: [Fase 4] Webhook Kiwify: Estorno/Reembolso revoga acesso Vitalício
+  // ----------------------------------------------------
+  await test('36. [Fase 4] Webhook Kiwify: Estorno/Reembolso revoga acesso Vitalício...', async () => {
+    const refundRes = await request(`/api/webhooks/kiwify?token=secret_test_token_2026`, {
+      method: 'POST',
+      body: {
+        order_id: kwOrderId,
+        order_status: 'refunded',
+        Customer: { email: userA.email }
+      }
     });
-    assert.strictEqual(tokenRes.status, 200);
-    assert.strictEqual(tokenRes.data.success, true);
+
+    assert.strictEqual(refundRes.status, 200);
+    assert.strictEqual(refundRes.data.plano_revogado, true);
+
+    const orgA = organizationsDb.findById(tenantA.id);
+    assert.strictEqual(orgA.plano, 'GRATIS');
+    assert.strictEqual(orgA.trialAtivo, false);
   });
 
   // Finalização do servidor de teste

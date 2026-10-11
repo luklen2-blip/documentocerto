@@ -278,6 +278,27 @@ async function runAudit() {
     return `Plano Vitalício configurado, Checkout: ${res.data.data.kiwifyUrl}`;
   });
 
+  // 13. Proteção do Endpoint Administrativo contra Acesso Não Autorizado
+  await auditTest('AUDIT-13', 'Proteção do Endpoint Administrativo (Rejeição sem x-admin-key HTTP 401)', async () => {
+    const res = await req('/api/admin/metrics');
+    assert.strictEqual(res.status, 401);
+    assert.strictEqual(res.data.error.code, 'ADMIN_UNAUTHORIZED');
+    return `Rejeitado com HTTP 401 ADMIN_UNAUTHORIZED`;
+  });
+
+  // 14. Acesso Autorizado do Operador de Plataforma via x-admin-key
+  await auditTest('AUDIT-14', 'Métricas de Plataforma e Funil com Chave Mestra x-admin-key (HTTP 200)', async () => {
+    const adminKey = process.env.ADMIN_KEY || 'documentocerto_admin_migrate_2026';
+    const res = await req('/api/admin/metrics', {
+      headers: { 'x-admin-key': adminKey }
+    });
+    assert.strictEqual(res.status, 200);
+    assert.ok(res.data.data.funil);
+    assert.ok(typeof res.data.data.funil.totalCadastros === 'number');
+    const f = res.data.data.funil;
+    return `Métricas recebidas com sucesso: ${f.totalCadastros} cadastros, ${f.vitaliciosAtivos} vitalícios (${f.taxaConversao})`;
+  });
+
   console.log('\n================================================================');
   console.log(`📊 RESULTADO DA AUDITORIA INDEPENDENTE DE PRODUÇÃO:`);
   console.log(`   Total de Testes: ${passed + failed}`);

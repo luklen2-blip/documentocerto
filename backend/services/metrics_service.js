@@ -47,14 +47,16 @@ export class MetricsService {
           (SELECT COUNT(*)::int FROM analysis_jobs) AS total_conferencias;
       `);
 
-      // 3. Métricas de Receita e Transações Kiwify
+      // 3. Métricas de Receita e Transações Kiwify (Sem dupla contagem, com estornos segregados)
       const financialQuery = await query(`
         SELECT 
-          COALESCE(SUM(valor_pago), 0)::numeric(10,2) AS receita_total,
-          COUNT(*)::int AS total_transacoes_pagas,
-          COUNT(*) FILTER (WHERE status = 'PAID_PENDING_CLAIM')::int AS transacoes_pendentes_resgate
-        FROM kiwify_transactions
-        WHERE status = 'PAID' OR status = 'PAID_PENDING_CLAIM';
+          COALESCE(SUM(valor_pago) FILTER (WHERE status = 'PAID'), 0)::numeric(10,2) AS receita_consolidada,
+          COALESCE(SUM(valor_pago) FILTER (WHERE status = 'PAID_PENDING_CLAIM'), 0)::numeric(10,2) AS receita_pendente,
+          COALESCE(SUM(valor_pago) FILTER (WHERE status IN ('REFUNDED', 'CHARGEDBACK')), 0)::numeric(10,2) AS total_estornado,
+          COUNT(*) FILTER (WHERE status = 'PAID')::int AS transacoes_consolidadas,
+          COUNT(*) FILTER (WHERE status = 'PAID_PENDING_CLAIM')::int AS transacoes_pendentes,
+          COUNT(*) FILTER (WHERE status IN ('REFUNDED', 'CHARGEDBACK'))::int AS transacoes_estornadas
+        FROM kiwify_transactions;
       `);
 
       // 4. Últimas 10 transações para o gestor
@@ -76,8 +78,11 @@ export class MetricsService {
       const taxaConversaoNum = totalOrgs > 0 ? (vitalicios / totalOrgs) * 100 : 0;
       const taxaConversao = `${taxaConversaoNum.toFixed(1)}%`;
 
-      // Fallback de receita se o registro transacional for menor que as organizações ativadas
-      const receitaEstimada = Math.max(parseFloat(finData.receita_total || 0), vitalicios * 19.90);
+      const receitaConsolidada = parseFloat(finData.receita_consolidada || 0);
+      const receitaPendente = parseFloat(finData.receita_pendente || 0);
+      const totalEstornado = parseFloat(finData.total_estornado || 0);
+      const receitaBruta = Math.max(receitaConsolidada + receitaPendente, vitalicios * 19.90);
+      const receitaLiquida = Math.max(0, receitaBruta - totalEstornado);
 
       return {
         funil: {
@@ -99,10 +104,15 @@ export class MetricsService {
           cadastrosUltimos7Dias: orgData.cadastros_ultimos_7_dias || 0
         },
         financeiro: {
-          receitaTotalBruta: receitaEstimada,
-          receitaFormatada: `R$ ${receitaEstimada.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-          totalTransacoesPagas: finData.total_transacoes_pagas || vitalicios,
-          transacoesPendentesResgate: finData.transacoes_pendentes_resgate || 0,
+          receitaTotalBruta: receitaBruta,
+          receitaConsolidada,
+          receitaPendente,
+          totalEstornado,
+          receitaLiquida,
+          receitaFormatada: `R$ ${receitaLiquida.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          totalTransacoesPagas: finData.transacoes_consolidadas || vitalicios,
+          transacoesPendentesResgate: finData.transacoes_pendentes || 0,
+          transacoesEstornadas: finData.transacoes_estornadas || 0,
           ticketMedio: 19.90
         },
         ultimasTransacoes: recentTxQuery.rows || [],
@@ -152,10 +162,15 @@ export class MetricsService {
     const taxaConversao = `${taxaConversaoNum.toFixed(1)}%`;
 
     const txs = kiwifyTransactionsDb.findAll();
-    const receitaTotal = Math.max(
-      txs.reduce((acc, t) => acc + (parseFloat(t.valorPago) || 0), 0),
-      vitaliciosAtivos * 19.90
-    );
+    const paidTxs = txs.filter(t => t.status === 'PAID');
+    const pendingTxs = txs.filter(t => t.status === 'PAID_PENDING_CLAIM');
+    const refundedTxs = txs.filter(t => t.status === 'REFUNDED' || t.status === 'CHARGEDBACK');
+
+    const receitaConsolidada = paidTxs.reduce((acc, t) => acc + (parseFloat(t.valorPago) || 0), 0);
+    const receitaPendente = pendingTxs.reduce((acc, t) => acc + (parseFloat(t.valorPago) || 0), 0);
+    const totalEstornado = refundedTxs.reduce((acc, t) => acc + (parseFloat(t.valorPago) || 0), 0);
+    const receitaBruta = Math.max(receitaConsolidada + receitaPendente, vitaliciosAtivos * 19.90);
+    const receitaLiquida = Math.max(0, receitaBruta - totalEstornado);
 
     const sortedTxs = [...txs]
       .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
@@ -181,10 +196,15 @@ export class MetricsService {
         cadastrosUltimos7Dias: cadastros7Dias
       },
       financeiro: {
-        receitaTotalBruta: receitaTotal,
-        receitaFormatada: `R$ ${receitaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-        totalTransacoesPagas: txs.length || vitaliciosAtivos,
-        transacoesPendentesResgate: txs.filter(t => t.status === 'PAID_PENDING_CLAIM').length,
+        receitaTotalBruta: receitaBruta,
+        receitaConsolidada,
+        receitaPendente,
+        totalEstornado,
+        receitaLiquida,
+        receitaFormatada: `R$ ${receitaLiquida.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        totalTransacoesPagas: paidTxs.length || vitaliciosAtivos,
+        transacoesPendentesResgate: pendingTxs.length,
+        transacoesEstornadas: refundedTxs.length,
         ticketMedio: 19.90
       },
       ultimasTransacoes: sortedTxs,

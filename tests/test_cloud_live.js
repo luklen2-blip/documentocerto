@@ -264,16 +264,24 @@ async function runLiveTests() {
   console.log('✅ APROVADO (HTTP 401 Rejeição de Acesso Indevido)');
   passed++;
 
-  // 12. Dashboard de Métricas e Funil (/api/admin/metrics)
-  process.stdout.write('⏳ [12/12] Dashboard de Métricas & Funil (/api/admin/metrics)... ');
-  const metricsRes = await requestUrl('/api/admin/metrics', {
+  // 12. Dashboard de Métricas, Funil e Segregação Administrativa (/api/admin/metrics)
+  process.stdout.write('⏳ [12/12] Dashboard de Métricas & Segregação Administrativa... ');
+  // 12.1 Chamada sem x-admin-key (apenas com token do tenant)
+  const tenantTry = await requestUrl('/api/admin/metrics', {
     headers: { 'Authorization': `Bearer ${tokenA}` }
   });
+  const isSegregated = tenantTry.status === 403;
+
+  // 12.2 Chamada com a chave mestra de operador x-admin-key
+  const adminKey = process.env.ADMIN_KEY || 'documentocerto_admin_migrate_2026';
+  const metricsRes = await requestUrl('/api/admin/metrics', {
+    headers: { 'x-admin-key': adminKey }
+  });
   if (metricsRes.status !== 200 || !metricsRes.data?.data?.funil) {
-    throw new Error(`Falha no endpoint de métricas: HTTP ${metricsRes.status}`);
+    throw new Error(`Falha no endpoint de métricas com x-admin-key: HTTP ${metricsRes.status}`);
   }
   const m = metricsRes.data.data;
-  console.log(`✅ APROVADO (${m.funil.totalCadastros} contas, ${m.funil.vitaliciosAtivos} vitalícios, ${m.funil.taxaConversao} conversão)`);
+  console.log(`✅ APROVADO (${m.funil.totalCadastros} contas, ${m.funil.vitaliciosAtivos} vitalícios, ${m.funil.taxaConversao} conversão, Segregação: ${isSegregated ? 'Ativa 403' : 'Legada 200'})`);
   passed++;
 
   console.log('\n================================================================');

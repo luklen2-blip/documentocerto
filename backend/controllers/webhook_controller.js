@@ -244,6 +244,8 @@ export class WebhookController {
 
         // Localiza transação anterior
         const tx = kiwifyTransactionsDb.findOne(t => t.orderId === payload.orderId);
+        let planoRevogado = false;
+
         if (tx) {
           kiwifyTransactionsDb.update(tx.id, {
             status: payload.orderStatus.toUpperCase(),
@@ -251,14 +253,33 @@ export class WebhookController {
           });
 
           if (tx.tenantId) {
+            // Verifica se a organização possui outro pedido com pagamento aprovado ativo
+            const otherActiveTxs = kiwifyTransactionsDb.findAll(
+              t => t.tenantId === tx.tenantId && t.id !== tx.id && t.status === 'PAID'
+            );
+
+            if (otherActiveTxs.length === 0) {
+              // Revoga o plano Vitalício e marca período de teste como expirado
+              organizationsDb.update(tx.tenantId, {
+                plano: 'GRATIS',
+                trialAtivo: false,
+                trialExpiraEm: new Date(Date.now() - 3600000).toISOString(), // Expiração no passado
+                limiteProcessosMes: 3,
+                updatedAt: new Date().toISOString()
+              });
+              planoRevogado = true;
+              console.log(`[Kiwify Webhook]: ✅ Acesso Vitalício revogado para a organização ${tx.tenantId} devido a ${payload.orderStatus}.`);
+            }
+
             auditDb.insert({
               tenantId: tx.tenantId,
               userId: tx.userId,
-              action: 'KIWIFY_ORDER_REFUNDED_WARNING',
+              action: 'KIWIFY_ORDER_REFUNDED_REVOKED',
               details: {
                 orderId: payload.orderId,
                 status: payload.orderStatus,
-                alerta: 'REQUIRES_ADMIN_REVIEW'
+                planoRevogado,
+                alerta: planoRevogado ? 'ACESSO_VITALICIO_REVOGADO' : 'OUTRO_PAGAMENTO_ATIVO_MANTIDO'
               },
               timestamp: new Date().toISOString()
             });
@@ -277,8 +298,9 @@ export class WebhookController {
 
         return res.status(200).json({
           success: true,
-          message: `Evento de ${payload.orderStatus} registrado para auditoria.`,
-          order_id: payload.orderId
+          message: `Evento de ${payload.orderStatus} processado com sucesso. ${planoRevogado ? 'Acesso vitalício revogado.' : ''}`,
+          order_id: payload.orderId,
+          plano_revogado: planoRevogado
         });
       }
 
