@@ -90,7 +90,7 @@ async function runLiveTests() {
   console.log('================================================================\n');
 
   let passed = 0;
-  const total = 12;
+  const total = 13;
 
   // 1. Monitoramento 24/7 & Conectividade com Banco
   process.stdout.write('⏳ [1/11] Saúde 24/7 (/api/health) e PostgreSQL... ');
@@ -282,6 +282,53 @@ async function runLiveTests() {
   }
   const m = metricsRes.data.data;
   console.log(`✅ APROVADO (${m.funil.totalCadastros} contas, ${m.funil.vitaliciosAtivos} vitalícios, ${m.funil.taxaConversao} conversão, Segregação: ${isSegregated ? 'Ativa 403' : 'Legada 200'})`);
+  passed++;
+
+  // 13. [Fase 5] Experiência de Onboarding, Sincronização de Trial e Analytics Anônimo
+  process.stdout.write('⏳ [13/13] Onboarding Interativo, Trial Sincronizado & Analytics... ');
+  // 13.1 Verifica se SPA contém modais de onboarding
+  if (!home.raw.includes('modal-onboarding-wizard') || !home.raw.includes('modal-help') || !home.raw.includes('modal-trial-info')) {
+    throw new Error('SPA index.html não contém os modais da Fase 5');
+  }
+
+  // 13.2 Registra evento anônimo de onboarding no backend
+  const eventRes = await requestUrl('/api/audit/onboarding-event', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenA}` },
+    body: JSON.stringify({
+      eventType: 'tutorial_iniciado',
+      metadata: { step: 1 }
+    })
+  });
+  if (eventRes.status !== 200) {
+    throw new Error(`Falha ao registrar onboarding-event: HTTP ${eventRes.status}`);
+  }
+
+  // 13.3 Sincronização de servidor em /api/auth/me
+  const meRes = await requestUrl('/api/auth/me', {
+    headers: { 'Authorization': `Bearer ${tokenA}` }
+  });
+  if (meRes.status !== 200 || !meRes.data?.data?.organization?.serverTime) {
+    throw new Error('Falha na sincronização de horário do servidor em /api/auth/me');
+  }
+
+  // 13.4 Criação de processo com modo de demonstração isDemo: true
+  const demoProc = await requestUrl('/api/processes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenA}` },
+    body: JSON.stringify({
+      nome: `[DEMO] Processo de Teste Nuvem - ${Date.now()}`,
+      tipo: 'Admissão CLT (Demonstração)',
+      checklistId: procA.checklistId,
+      responsavelNome: 'Demonstração Interativa',
+      prazo: '2026-12-31',
+      isDemo: true
+    })
+  });
+  if (demoProc.status !== 201 || !demoProc.data?.data?.isDemo) {
+    throw new Error(`Falha na criação de processo demo em produção: HTTP ${demoProc.status}`);
+  }
+  console.log(`✅ APROVADO (Modais OK, Evento HTTP 200, Sincronização OK, Processo Demo ID: ${demoProc.data.data.id})`);
   passed++;
 
   console.log('\n================================================================');
