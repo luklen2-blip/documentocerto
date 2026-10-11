@@ -1029,6 +1029,137 @@ async function runAllTests() {
     assert.strictEqual(orgA.trialAtivo, false);
   });
 
+  // ----------------------------------------------------
+  // TESTE 37: [Fase 5] Analytics Anônimo de Onboarding (POST /api/audit/onboarding-event)
+  // ----------------------------------------------------
+  await test('37. [Fase 5] Analytics Anônimo de Onboarding (POST /api/audit/onboarding-event)', async () => {
+    // 37.1 - Requisição sem autenticação deve retornar 401
+    const unauth = await request('/api/audit/onboarding-event', {
+      method: 'POST',
+      body: { eventType: 'tutorial_iniciado', metadata: { step: 1 } }
+    });
+    assert.strictEqual(unauth.status, 401);
+
+    // 37.2 - Evento com tipo inválido deve retornar 400
+    const invalidType = await request('/api/audit/onboarding-event', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${tokenA}` },
+      body: { eventType: 'evento_nao_permitido' }
+    });
+    assert.strictEqual(invalidType.status, 400);
+    assert.strictEqual(invalidType.data.error.code, 'INVALID_EVENT');
+
+    // 37.3 - Evento válido (tutorial_iniciado) com sanitização de metadados
+    const validEvent = await request('/api/audit/onboarding-event', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${tokenA}` },
+      body: {
+        eventType: 'tutorial_iniciado',
+        metadata: {
+          step: 1,
+          sensitiveDataThatMustBeIgnored: 'ignorar_isto'
+        }
+      }
+    });
+    assert.strictEqual(validEvent.status, 200);
+    assert.strictEqual(validEvent.data.success, true);
+    assert.strictEqual(validEvent.data.data.eventType, 'tutorial_iniciado');
+
+    // 37.4 - Evento tutorial_etapa_concluida
+    const stepDone = await request('/api/audit/onboarding-event', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${tokenA}` },
+      body: { eventType: 'tutorial_etapa_concluida', metadata: { step: 2 } }
+    });
+    assert.strictEqual(stepDone.status, 200);
+
+    // 37.5 - Evento checkout_aberto
+    const checkoutEvent = await request('/api/audit/onboarding-event', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${tokenA}` },
+      body: { eventType: 'checkout_aberto' }
+    });
+    assert.strictEqual(checkoutEvent.status, 200);
+  });
+
+  // ----------------------------------------------------
+  // TESTE 38: [Fase 5] Sincronização de Relógio e Formatação de Trial em GET /api/auth/me
+  // ----------------------------------------------------
+  await test('38. [Fase 5] Sincronização de Relógio e Formatação de Trial em GET /api/auth/me', async () => {
+    // 38.1 - Usuário Vitalício (Tenant B) retorna serverTime e status comercial ativo
+    const vitRes = await request('/api/auth/me', {
+      headers: { 'Authorization': `Bearer ${tokenB}` }
+    });
+    assert.strictEqual(vitRes.status, 200);
+    assert.strictEqual(vitRes.data.success, true);
+    const orgVit = vitRes.data.data.organization;
+    assert.ok(orgVit.serverTime, 'Deve retornar serverTime');
+    const vitTime = new Date(orgVit.serverTime).getTime();
+    assert.ok(!isNaN(vitTime), 'serverTime deve ser timestamp ISO válido');
+    assert.strictEqual(orgVit.statusComercial, 'ATIVO');
+    assert.strictEqual(orgVit.plano, 'VITALICIO');
+
+    // 38.2 - Usuário em Período de Teste (Trial Ativo) retorna trialExpiraEm, formatada e serverTime
+    const trialReg = await request('/api/auth/register', {
+      method: 'POST',
+      body: {
+        nome: 'Usuario Trial Onboarding',
+        email: `trial.onboard.${Date.now()}@teste.com.br`,
+        senha: 'senhaTrial123@',
+        nomeEmpresa: 'Empresa Em Teste 24h',
+        cpfCnpj: '33.444.555/0001-66'
+      }
+    });
+    assert.strictEqual(trialReg.status, 201);
+    const trialToken = trialReg.data.data.token;
+
+    const trialMeRes = await request('/api/auth/me', {
+      headers: { 'Authorization': `Bearer ${trialToken}` }
+    });
+    assert.strictEqual(trialMeRes.status, 200);
+    assert.strictEqual(trialMeRes.data.success, true);
+    const orgTrial = trialMeRes.data.data.organization;
+
+    assert.ok(orgTrial.serverTime, 'Deve retornar serverTime');
+    assert.ok(orgTrial.trialExpiraEm, 'Deve conter trialExpiraEm no trial');
+    assert.ok(orgTrial.trialExpiraEmFormatada, 'Deve conter trialExpiraEmFormatada');
+    assert.strictEqual(typeof orgTrial.trialExpiraEmFormatada, 'string');
+    assert.strictEqual(orgTrial.statusComercial, 'TRIAL_ATIVO');
+    assert.strictEqual(orgTrial.trialExpirado, false);
+  });
+
+  // ----------------------------------------------------
+  // TESTE 39: [Fase 5] Criação de Processo de Demonstração Isolado (isDemo: true)
+  // ----------------------------------------------------
+  await test('39. [Fase 5] Criação de Processo de Demonstração Isolado (isDemo: true)', async () => {
+    const res = await request('/api/processes', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${tokenB}` },
+      body: {
+        nome: '[DEMO] Processo de Teste Guiado',
+        tipo: 'Admissão CLT (Demonstração)',
+        checklistId: 'chk_admissao_default',
+        responsavelNome: 'Demonstração Interativa',
+        prazo: '2026-12-31',
+        isDemo: true
+      }
+    });
+
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.data.success, true);
+    assert.strictEqual(res.data.data.isDemo, true);
+    assert.ok(res.data.data.id);
+
+    // Listagem deve preservar a flag isDemo
+    const listRes = await request('/api/processes', {
+      headers: { 'Authorization': `Bearer ${tokenB}` }
+    });
+    assert.strictEqual(listRes.status, 200);
+    const demoFound = listRes.data.data.find(p => p.id === res.data.data.id);
+    assert.ok(demoFound);
+    assert.strictEqual(demoFound.isDemo, true);
+  });
+
   // Finalização do servidor de teste
   server.close();
 

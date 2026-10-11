@@ -21,4 +21,50 @@ router.get('/process/:processId', (req, res) => {
   res.status(200).json({ success: true, data: logs });
 });
 
+// Registra eventos do tutorial de onboarding e primeiros passos (anônimo, sem dados sensíveis)
+router.post('/onboarding-event', (req, res) => {
+  const event = req.body.event || req.body.eventType;
+  const step = req.body.step ?? req.body.metadata?.step;
+  const actionName = req.body.actionName ?? req.body.metadata?.actionName;
+  const allowedEvents = [
+    'tutorial_iniciado',
+    'tutorial_etapa_concluida',
+    'tutorial_pulado',
+    'tutorial_finalizado',
+    'primeira_acao_relevante',
+    'checkout_aberto'
+  ];
+
+  if (!event || !allowedEvents.includes(event)) {
+    return res.status(400).json({
+      success: false,
+      error: {
+        code: 'INVALID_EVENT',
+        message: 'Tipo de evento de onboarding inválido ou não suportado.'
+      }
+    });
+  }
+
+  // Sanitização estrita: registrar somente metadados técnicos seguros (sem documentos, CPF ou dados pessoais)
+  const safeDetails = {
+    event,
+    step: typeof step === 'number' ? step : undefined,
+    actionName: typeof actionName === 'string' ? actionName.slice(0, 50) : undefined
+  };
+
+  AuditService.log({
+    tenantId: req.user.tenantId,
+    userId: req.user.id,
+    userName: req.user.nome,
+    action: `ONBOARDING_${event.toUpperCase()}`,
+    details: safeDetails
+  });
+
+  return res.status(200).json({
+    success: true,
+    data: { event, eventType: event },
+    message: 'Evento de onboarding registrado com sucesso.'
+  });
+});
+
 export default router;

@@ -192,6 +192,8 @@ export function enrichOrganization(org) {
     trialExpirado: isExpired,
     trialHorasRestantes: hoursRemaining,
     trialMinutosRestantes: minutesRemaining,
+    serverTime: now.toISOString(),
+    trialExpiraEmFormatada: org.trialExpiraEm ? new Date(org.trialExpiraEm).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : null,
     upgradeUrl: 'https://pay.kiwify.com.br/ueLjXAd'
   };
 }

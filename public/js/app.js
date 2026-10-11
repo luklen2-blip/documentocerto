@@ -11,12 +11,18 @@ class DocumentoCertoApp {
     this.currentProcess = null;
     this.checklists = [];
     this.authMode = 'login'; // 'login' ou 'register'
+    this.serverTimeOffset = 0;
+    this.onboardingStep = 1;
+    this.onboardingActive = false;
+    this.currentHighlightedEl = null;
+    this._trialInterval = null;
 
     this.init();
   }
 
   async init() {
     this.setupIcons();
+    this.setupAccessibilityListeners();
     this.loadPlans();
 
     if (this.token) {
@@ -29,6 +35,25 @@ class DocumentoCertoApp {
     } else {
       this.navigate('home');
     }
+  }
+
+  setupAccessibilityListeners() {
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (this.onboardingActive) {
+          this.skipOnboarding();
+        } else {
+          const openModals = document.querySelectorAll('[id^="modal-"]:not(.hidden)');
+          openModals.forEach(m => this.closeModal(m.id));
+        }
+      } else if (e.key === 'Enter' && this.onboardingActive) {
+        const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+        if (tag !== 'button' && tag !== 'input' && tag !== 'textarea') {
+          e.preventDefault();
+          this.nextOnboardingStep();
+        }
+      }
+    });
   }
 
   setupIcons() {
@@ -112,7 +137,12 @@ class DocumentoCertoApp {
       if (res.success && res.data) {
         this.user = res.data.user;
         this.organization = res.data.organization;
+        if (this.organization?.serverTime) {
+          this.serverTimeOffset = new Date(this.organization.serverTime).getTime() - Date.now();
+        }
         this.updateNavState();
+        this.startTrialCountdownTimer();
+        this.checkFirstAccessOnboarding();
         return true;
       }
       return false;
@@ -142,27 +172,8 @@ class DocumentoCertoApp {
       if (tabMembers) tabMembers.style.display = isAdm ? 'flex' : 'none';
       if (tabAudit) tabAudit.style.display = isAdm ? 'flex' : 'none';
 
-      // Atualiza banner de período de teste de 1 dia (controlado exclusivamente pelo backend)
-      const trialBanner = document.getElementById('trial-banner');
-      const trialText = document.getElementById('trial-banner-text');
-      if (trialBanner && this.organization) {
-        if (this.organization.plano === 'VITALICIO') {
-          trialBanner.style.display = 'none';
-        } else if (this.organization.trialExpirado) {
-          trialBanner.style.display = 'flex';
-          trialBanner.className = 'mt-4 p-4 bg-amber-50 border border-amber-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs';
-          if (trialText) {
-            trialText.innerHTML = '<span class="font-bold text-amber-900">Seu período de teste de 24 horas encerrou.</span> Para continuar criando processos, enviando documentos e realizando novas conferências, garanta o seu Plano Vitalício.';
-          }
-        } else if (this.organization.trialAtivo) {
-          trialBanner.style.display = 'flex';
-          trialBanner.className = 'mt-4 p-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs';
-          const horas = this.organization.trialHorasRestantes ?? 24;
-          if (trialText) {
-            trialText.textContent = `Você tem ${horas} hora(s) de período de teste com acesso total liberado. Aproveite!`;
-          }
-        }
-      }
+      // Atualiza banner de período de teste de forma sincronizada com o servidor
+      this.updateTrialCountdownDisplay();
     } else {
       navGuest.classList.remove('hidden');
       navAuth.classList.add('hidden');
@@ -234,11 +245,16 @@ class DocumentoCertoApp {
         this.token = res.data.token;
         this.user = res.data.user;
         this.organization = res.data.organization;
+        if (this.organization?.serverTime) {
+          this.serverTimeOffset = new Date(this.organization.serverTime).getTime() - Date.now();
+        }
         localStorage.setItem('dc_token', this.token);
         this.closeModal('modal-auth');
         this.updateNavState();
         this.navigate('dashboard');
-        this.toast('Organização criada com sucesso!', 'success');
+        this.startTrialCountdownTimer();
+        this.checkFirstAccessOnboarding();
+        this.toast('Organização criada com sucesso! Aproveite seu período de teste de 24 horas.', 'success');
       }
     } else {
       const res = await this.api('/api/auth/login', {
@@ -250,20 +266,27 @@ class DocumentoCertoApp {
         this.token = res.data.token;
         this.user = res.data.user;
         this.organization = res.data.organization;
+        if (this.organization?.serverTime) {
+          this.serverTimeOffset = new Date(this.organization.serverTime).getTime() - Date.now();
+        }
         localStorage.setItem('dc_token', this.token);
         this.closeModal('modal-auth');
         this.updateNavState();
         this.navigate('dashboard');
+        this.startTrialCountdownTimer();
+        this.checkFirstAccessOnboarding();
         this.toast('Login realizado com sucesso!', 'success');
       }
     }
   }
 
   logout() {
+    if (this._trialInterval) clearInterval(this._trialInterval);
     this.token = null;
     this.user = null;
     this.organization = null;
     localStorage.removeItem('dc_token');
+    sessionStorage.removeItem('dc_platform_admin_key');
     this.updateNavState();
     this.navigate('home');
     this.toast('Sessão encerrada com segurança.', 'info');
@@ -1428,6 +1451,362 @@ class DocumentoCertoApp {
       <p><strong>5. Contato do Encarregado (DPO):</strong> Para requisições LGPD, contate privacidade@documentocerto.com.br.</p>
     `;
     document.getElementById('modal-legal').classList.remove('hidden');
+  }
+
+  // ================= ONBOARDING INTERATIVO & EXPERIÊNCIA DE TESTE GRÁTIS =================
+  get onboardingSteps() {
+    return [
+      {
+        step: 1,
+        title: 'Boas-vindas ao DocumentoCerto',
+        badge: 'Etapa 1 de 7',
+        progress: '14.3%',
+        desc: 'O DocumentoCerto foi criado para evitar retrabalho, devoluções de protocolo e atrasos causados por documentos faltantes ou inconsistentes. Vamos fazer um tour guiado de 1 minuto pelas funções principais.',
+        tip: 'Dica de navegação: use a tecla Enter para avançar, Esc para fechar, ou clique em Pular a qualquer momento.',
+        highlightId: 'tab-dashboard',
+        actionHtml: `
+          <button onclick="window.app.nextOnboardingStep()" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-sm transition flex items-center justify-center gap-1.5">
+            <span>Iniciar Tour Guiado</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        `
+      },
+      {
+        step: 2,
+        title: 'Painel & Status Determinístico',
+        badge: 'Etapa 2 de 7',
+        progress: '28.6%',
+        desc: 'O painel classifica seus processos em 3 estados reais e auditáveis: Completo (verde), Em Análise / Atenção (amarelo) e Incompleto (vermelho). Nada de notas subjetivas ou respostas inventadas: todas as regras derivam do checklist.',
+        tip: 'Você acompanha em tempo real quantos dossiês estão prontos e quantos ainda exigem providências da sua equipe.',
+        highlightId: 'kpi-total',
+        actionHtml: null
+      },
+      {
+        step: 3,
+        title: 'Criar ou Selecionar Processo',
+        badge: 'Etapa 3 de 7',
+        progress: '42.9%',
+        desc: 'Cadastre processos de admissão CLT, cadastros de clientes ou homologação de fornecedores. Se preferir explorar sem usar arquivos da sua empresa agora, você pode gerar um processo com dados fictícios com 1 clique.',
+        tip: 'Dados de demonstração são isolados no seu ambiente de teste e sinalizados claramente com a etiqueta [DEMO].',
+        highlightId: 'tab-processes',
+        actionHtml: `
+          <div class="flex flex-col sm:flex-row gap-2">
+            <button onclick="window.app.createDemoProcess()" class="flex-1 py-2 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+              <i data-lucide="sparkles" class="w-4 h-4"></i> Criar Processo de Demonstração
+            </button>
+            <button onclick="window.app.nextOnboardingStep()" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs">
+              Continuar Tour
+            </button>
+          </div>
+        `
+      },
+      {
+        step: 4,
+        title: 'Upload Seguro & Storage Relacional',
+        badge: 'Etapa 4 de 7',
+        progress: '57.1%',
+        desc: 'Ao anexar PDFs, JPGs ou PNGs, o DocumentoCerto calcula automaticamente o hash criptográfico SHA-256 do arquivo e armazena os dados de forma persistente e protegida em banco PostgreSQL relacional.',
+        tip: 'Seus arquivos nunca ficam em links públicos e respeitam estritamente a LGPD (Lei 13.709/2018).',
+        highlightId: 'tab-checklists',
+        actionHtml: null
+      },
+      {
+        step: 5,
+        title: 'Conferência Automática & Leitura OCR',
+        badge: 'Etapa 5 de 7',
+        progress: '71.4%',
+        desc: 'A plataforma extrai textos reais com OCR e executa a conferência com base no checklist configurado. Não existem resultados simulados ou aleatórios: apenas dados verificados no documento.',
+        tip: 'Se um documento tiver assinatura ausente, prazo vencido ou dados divergentes, o sistema aponta exatamente a inconsistência.',
+        highlightId: 'tab-checklists',
+        actionHtml: null
+      },
+      {
+        step: 6,
+        title: 'Achados da Conferência & Resolução',
+        badge: 'Etapa 6 de 7',
+        progress: '85.7%',
+        desc: 'No detalhe de cada processo, você visualiza os achados com nível de gravidade, justificativa e a opção de substituir o arquivo corrigido ou resolver a pendência mantendo todo o histórico de auditoria.',
+        tip: 'O histórico grava quem enviou, substituiu ou validou cada item com carimbo de tempo inviolável.',
+        highlightId: 'tab-audit',
+        actionHtml: null
+      },
+      {
+        step: 7,
+        title: 'Pronto para Começar!',
+        badge: 'Etapa 7 de 7',
+        progress: '100%',
+        desc: 'Você está pronto para usar o DocumentoCerto! Seu período de teste gratuito de 24 horas está ativo com acesso a todas as ferramentas. Ao término, você pode ativar o acesso vitalício por R$ 19,90 em pagamento único.',
+        tip: 'Precisa de ajuda ou quer rever este tutorial? Clique em Ajuda & Tutorial no menu superior a qualquer momento.',
+        highlightId: 'tab-help',
+        actionHtml: `
+          <div class="flex flex-col sm:flex-row gap-2">
+            <button onclick="window.app.finishOnboarding()" class="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i> Concluir Tutorial e Explorar
+            </button>
+            <button onclick="window.app.openTrialInfoModal()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs">
+              Ver Detalhes do Teste
+            </button>
+          </div>
+        `
+      }
+    ];
+  }
+
+  highlightElement(elementId) {
+    this.clearHighlight();
+    if (!elementId) return;
+    const el = document.getElementById(elementId);
+    if (el) {
+      this.currentHighlightedEl = el;
+      el.classList.add('ring-4', 'ring-emerald-400', 'ring-offset-2', 'transition-all', 'duration-300');
+      try {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch {}
+    }
+  }
+
+  clearHighlight() {
+    if (this.currentHighlightedEl) {
+      this.currentHighlightedEl.classList.remove('ring-4', 'ring-emerald-400', 'ring-offset-2', 'transition-all', 'duration-300');
+      this.currentHighlightedEl = null;
+    }
+  }
+
+  startOnboarding(force = false) {
+    if (!force && localStorage.getItem('dc_onboarding_completed') === 'true') {
+      return;
+    }
+    this.onboardingStep = 1;
+    this.onboardingActive = true;
+    this.trackOnboardingEvent('tutorial_iniciado', { step: 1 });
+    this.renderOnboardingStep();
+    const modal = document.getElementById('modal-onboarding-wizard');
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  renderOnboardingStep() {
+    const steps = this.onboardingSteps;
+    const step = steps[this.onboardingStep - 1];
+    if (!step) return;
+
+    const badge = document.getElementById('onboarding-step-badge');
+    const title = document.getElementById('onboarding-step-title');
+    const bar = document.getElementById('onboarding-progress-bar');
+    const desc = document.getElementById('onboarding-step-desc');
+    const tipText = document.getElementById('onboarding-step-tip-text');
+    const actionSlot = document.getElementById('onboarding-action-slot');
+    const btnPrev = document.getElementById('btn-onboarding-prev');
+    const btnNext = document.getElementById('btn-onboarding-next');
+
+    if (badge) badge.textContent = step.badge;
+    if (title) title.textContent = step.title;
+    if (bar) bar.style.width = step.progress;
+    if (desc) desc.textContent = step.desc;
+    if (tipText) tipText.textContent = step.tip;
+
+    if (actionSlot) {
+      actionSlot.innerHTML = step.actionHtml || '';
+    }
+
+    if (btnPrev) {
+      btnPrev.disabled = this.onboardingStep === 1;
+    }
+
+    if (btnNext) {
+      if (this.onboardingStep === steps.length) {
+        btnNext.innerHTML = '<span>Concluir</span> <i data-lucide="check" class="w-4 h-4"></i>';
+      } else {
+        btnNext.innerHTML = '<span>Próxima etapa</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>';
+      }
+    }
+
+    this.highlightElement(step.highlightId);
+    this.setupIcons();
+  }
+
+  nextOnboardingStep() {
+    this.trackOnboardingEvent('tutorial_etapa_concluida', { step: this.onboardingStep });
+    if (this.onboardingStep < this.onboardingSteps.length) {
+      this.onboardingStep++;
+      this.renderOnboardingStep();
+    } else {
+      this.finishOnboarding();
+    }
+  }
+
+  prevOnboardingStep() {
+    if (this.onboardingStep > 1) {
+      this.onboardingStep--;
+      this.renderOnboardingStep();
+    }
+  }
+
+  skipOnboarding() {
+    this.trackOnboardingEvent('tutorial_pulado', { step: this.onboardingStep });
+    localStorage.setItem('dc_onboarding_completed', 'true');
+    this.closeOnboardingModal();
+  }
+
+  finishOnboarding() {
+    this.trackOnboardingEvent('tutorial_finalizado', { step: this.onboardingStep });
+    localStorage.setItem('dc_onboarding_completed', 'true');
+    this.closeOnboardingModal();
+    this.toast('Tutorial concluído! Aproveite seu período de teste.', 'success');
+  }
+
+  closeOnboardingModal() {
+    this.onboardingActive = false;
+    this.clearHighlight();
+    const modal = document.getElementById('modal-onboarding-wizard');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  restartOnboarding() {
+    localStorage.removeItem('dc_onboarding_completed');
+    this.startOnboarding(true);
+  }
+
+  checkFirstAccessOnboarding() {
+    if (this.user && !localStorage.getItem('dc_onboarding_completed')) {
+      setTimeout(() => {
+        if (!this.onboardingActive) {
+          this.startOnboarding();
+        }
+      }, 700);
+    }
+  }
+
+  async createDemoProcess() {
+    try {
+      this.trackOnboardingEvent('primeira_acao_relevante', { actionName: 'criar_processo_demo' });
+      if (this.checklists.length === 0) {
+        await this.loadChecklists();
+      }
+      const chkId = this.checklists[0]?.id || 'chk_admissao_default';
+      const todayStr = new Date().toLocaleDateString('pt-BR');
+      const prazoDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+
+      const res = await this.api('/api/processes', {
+        method: 'POST',
+        body: JSON.stringify({
+          nome: `[DEMO] Admissão de Exemplo - ${todayStr}`,
+          tipo: 'Admissão CLT (Demonstração)',
+          checklistId: chkId,
+          responsavelNome: this.user?.nome || 'Equipe RH',
+          prazo: prazoDate,
+          isDemo: true
+        })
+      });
+
+      if (res.success && res.data) {
+        this.toast('Processo de demonstração criado com sucesso!', 'success');
+        this.closeOnboardingModal();
+        this.navigate('processes');
+        this.viewProcessDetail(res.data.id);
+      }
+    } catch (err) {
+      this.toast('Erro ao criar processo demo: ' + err.message, 'error');
+    }
+  }
+
+  openHelpModal() {
+    const modal = document.getElementById('modal-help');
+    if (modal) modal.classList.remove('hidden');
+    this.setupIcons();
+  }
+
+  openTrialInfoModal() {
+    this.updateTrialCountdownDisplay();
+    const modal = document.getElementById('modal-trial-info');
+    if (modal) modal.classList.remove('hidden');
+    this.setupIcons();
+  }
+
+  startTrialCountdownTimer() {
+    if (this._trialInterval) {
+      clearInterval(this._trialInterval);
+      this._trialInterval = null;
+    }
+    this.updateTrialCountdownDisplay();
+    this._trialInterval = setInterval(() => {
+      this.updateTrialCountdownDisplay();
+    }, 15000);
+  }
+
+  updateTrialCountdownDisplay() {
+    if (!this.organization) return;
+
+    const banner = document.getElementById('trial-banner');
+    const bannerText = document.getElementById('trial-banner-text');
+    const infoRemaining = document.getElementById('trial-info-remaining');
+    const infoExpires = document.getElementById('trial-info-expires');
+
+    // Se a organização tem plano VITALICIO aprovado
+    if (this.organization.plano === 'VITALICIO') {
+      if (banner) {
+        banner.className = 'mt-4 p-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100 border border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs';
+        banner.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-emerald-200">
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-sm font-bold text-slate-900">Acesso Vitalício Ativo</h4>
+                <span class="text-[10px] font-extrabold bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-full uppercase tracking-wider">Ilimitado</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-0.5">Sua organização possui licença vitalícia permanente com todas as conferências liberadas.</p>
+            </div>
+          </div>
+        `;
+      }
+      if (infoRemaining) infoRemaining.textContent = 'Acesso Vitalício Permanente';
+      if (infoExpires) infoExpires.textContent = 'Sem data de expiração';
+      this.setupIcons();
+      return;
+    }
+
+    // Calcula tempo restante sincronizado com o servidor
+    const nowServer = Date.now() + (this.serverTimeOffset || 0);
+    const trialExpMs = this.organization.trialExpiraEm ? new Date(this.organization.trialExpiraEm).getTime() : nowServer;
+    const diffMs = trialExpMs - nowServer;
+
+    const expiresFormatted = this.organization.trialExpiraEmFormatada || 
+      (this.organization.trialExpiraEm ? new Date(this.organization.trialExpiraEm).toLocaleString('pt-BR') : '--');
+
+    if (infoExpires) infoExpires.textContent = expiresFormatted;
+
+    if (diffMs <= 0 || this.organization.trialExpirado) {
+      this.organization.trialExpirado = true;
+      this.organization.statusComercial = 'TRIAL_EXPIRADO';
+      if (infoRemaining) infoRemaining.textContent = 'Período encerrado';
+      if (bannerText) {
+        bannerText.innerHTML = '<span class="text-rose-600 font-bold">Seu período de teste de 24 horas terminou.</span> Seus documentos e dados permanecem salvos com segurança. Ative o vitalício para continuar analisando.';
+      }
+    } else {
+      const hours = Math.floor(diffMs / (1000 * 60 * 60));
+      const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      const remainingStr = `${hours}h ${mins}m restantes`;
+      if (infoRemaining) infoRemaining.textContent = remainingStr;
+      if (bannerText) {
+        bannerText.textContent = `Período de teste ativo (${remainingStr}). Teste todas as conferências inteligentes, OCR e validações sem compromisso.`;
+      }
+    }
+  }
+
+  async trackOnboardingEvent(eventType, metadata = {}) {
+    try {
+      if (!this.token) return;
+      await fetch('/api/audit/onboarding-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`
+        },
+        body: JSON.stringify({ eventType, metadata })
+      });
+    } catch (e) {
+      console.debug('[Onboarding Analytics Log]:', eventType, e.message);
+    }
   }
 }
 

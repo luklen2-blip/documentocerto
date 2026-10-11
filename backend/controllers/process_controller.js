@@ -67,7 +67,7 @@ export class ProcessController {
 
   static async create(req, res) {
     try {
-      const { nome, tipo, responsavelNome, prazo, observacoes, checklistId } = req.body;
+      const { nome, tipo, responsavelNome, prazo, observacoes, checklistId, isDemo } = req.body;
 
       if (!nome || !checklistId) {
         return res.status(400).json({
@@ -134,6 +134,7 @@ export class ProcessController {
         observacoes: observacoes ? observacoes.trim() : '',
         checklistId: checklist.id,
         checklistNome: checklist.nome,
+        isDemo: Boolean(isDemo),
         itens: processItens
       });
 

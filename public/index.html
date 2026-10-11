@@ -84,6 +84,10 @@
         <div class="hidden sm:flex items-center gap-2 text-xs text-slate-600">
           <span id="nav-user-name" class="font-medium">Usuário</span>
         </div>
+        <button onclick="window.app.openHelpModal()" title="Ajuda e Tutorial Guiado" aria-label="Abrir central de ajuda e tutorial" class="text-xs font-semibold text-slate-700 hover:text-emerald-700 bg-white border border-slate-200 hover:border-emerald-300 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1.5">
+          <i data-lucide="help-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span class="hidden md:inline">Ajuda</span>
+        </button>
         <button onclick="window.app.logout()" title="Encerrar sessão" class="text-xs font-semibold text-slate-600 hover:text-rose-600 bg-white border border-slate-200 hover:border-rose-200 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
           <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Sair</span>
@@ -109,6 +113,10 @@
       </button>
       <button onclick="window.app.navigate('audit')" id="tab-audit" class="subnav-btn flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-100">
         <i data-lucide="history" class="w-4 h-4"></i> Auditoria
+      </button>
+      <button onclick="window.app.openHelpModal()" id="tab-help" class="subnav-btn flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-100 transition" aria-label="Central de Ajuda e Tutorial">
+        <i data-lucide="help-circle" class="w-4 h-4 text-emerald-600"></i>
+        <span>Ajuda & Tutorial</span>
       </button>
       <button onclick="window.app.openAdminMetricsModal()" id="tab-analytics" class="subnav-btn flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 ml-auto transition border border-indigo-200">
         <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Analytics & Funil
@@ -1070,6 +1078,199 @@
         <button onclick="window.app.closeModal('modal-admin-metrics')" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg text-xs">
           Fechar
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ASSISTENTE DE ONBOARDING INTERATIVO ================= -->
+  <div id="modal-onboarding-wizard" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="onboarding-step-title">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 flex flex-col shadow-2xl border border-slate-200 relative fade-in" id="onboarding-dialog-card">
+      <!-- Cabeçalho -->
+      <div class="flex items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+            <i data-lucide="compass" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <span id="onboarding-step-badge" class="text-[10px] uppercase font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full tracking-wider">Etapa 1 de 7</span>
+            <h3 id="onboarding-step-title" class="text-base font-bold text-slate-900 mt-0.5 leading-snug">Boas-vindas ao DocumentoCerto</h3>
+          </div>
+        </div>
+        <button onclick="window.app.skipOnboarding()" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg transition" title="Fechar tutorial" aria-label="Fechar tutorial">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Barra de Progresso Visual -->
+      <div class="w-full bg-slate-100 rounded-full h-1.5 my-4 overflow-hidden" role="progressbar" aria-valuemin="1" aria-valuemax="7" id="onboarding-progressbar-container">
+        <div id="onboarding-progress-bar" class="bg-emerald-600 h-1.5 rounded-full transition-all duration-300" style="width: 14.3%"></div>
+      </div>
+
+      <!-- Conteúdo da Etapa -->
+      <div class="py-2 flex-1" id="onboarding-step-content" aria-live="polite">
+        <p id="onboarding-step-desc" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          O DocumentoCerto foi criado para evitar retrabalho, devoluções de protocolo e multas por documentos faltantes ou inconsistentes.
+        </p>
+        
+        <div id="onboarding-step-tip" class="mt-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 flex items-start gap-2.5">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+          <span id="onboarding-step-tip-text">Você pode testar com dados reais da sua empresa ou iniciar com um exemplo de demonstração com dados fictícios.</span>
+        </div>
+
+        <div id="onboarding-action-slot" class="mt-4">
+          <!-- Ações contextuais adicionadas dinamicamente via JS -->
+        </div>
+      </div>
+
+      <!-- Rodapé de Navegação com Foco e Contraste Adequados -->
+      <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+        <button onclick="window.app.skipOnboarding()" id="btn-onboarding-skip" class="text-xs font-semibold text-slate-400 hover:text-slate-600 px-3 py-2 rounded-lg transition">
+          Pular tutorial
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button onclick="window.app.prevOnboardingStep()" id="btn-onboarding-prev" class="px-3.5 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center gap-1" disabled>
+            <i data-lucide="chevron-left" class="w-4 h-4"></i> Voltar
+          </button>
+          <button onclick="window.app.nextOnboardingStep()" id="btn-onboarding-next" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition flex items-center gap-1">
+            <span>Próxima etapa</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CENTRAL DE AJUDA & TUTORIAL ================= -->
+  <div id="modal-help" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 flex flex-col shadow-2xl border border-slate-200 relative fade-in">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+            <i data-lucide="help-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 id="help-modal-title" class="text-base font-bold text-slate-900">Central de Ajuda & Orientações</h3>
+            <p class="text-xs text-slate-500">Tire dúvidas, reinicie o tutorial ou explore as funções.</p>
+          </div>
+        </div>
+        <button onclick="window.app.closeModal('modal-help')" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-3 text-xs">
+        <button onclick="window.app.closeModal('modal-help'); window.app.startOnboarding(true)" class="w-full p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100/60 text-left flex items-center justify-between transition group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
+              <i data-lucide="play" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <strong class="text-slate-900 font-bold block">Tutorial Interativo Guiado (7 etapas)</strong>
+              <span class="text-slate-600">Reveja o passo a passo com destaque na interface.</span>
+            </div>
+          </div>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-emerald-600 group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <button onclick="window.app.closeModal('modal-help'); window.app.createDemoProcess()" class="w-full p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100/60 text-left flex items-center justify-between transition group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <strong class="text-slate-900 font-bold block">Criar Exemplo de Demonstração</strong>
+              <span class="text-slate-600">Teste as funções sem inserir documentos reais da sua empresa.</span>
+            </div>
+          </div>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-indigo-600 group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <button onclick="window.app.closeModal('modal-help'); window.app.openTrialInfoModal()" class="w-full p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-left flex items-center justify-between transition group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+              <i data-lucide="clock" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <strong class="text-slate-900 font-bold block">Como Funciona o Período de Teste de 24 Horas</strong>
+              <span class="text-slate-600">Entenda prazos, permissões e a oferta de acesso vitalício.</span>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+          <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+            <i data-lucide="keyboard" class="w-3.5 h-3.5 text-slate-500"></i> Atalhos Rápidos de Teclado
+          </h4>
+          <ul class="space-y-1 text-slate-600">
+            <li><kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-[10px] font-mono">Esc</kbd> Fecha qualquer janela ou tutorial ativo</li>
+            <li><kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-[10px] font-mono">Enter</kbd> Avança para a próxima etapa do tutorial</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 text-right">
+        <button onclick="window.app.closeModal('modal-help')" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl text-xs">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: INFORMAÇÕES DO TESTE & OFERTA VITALÍCIA ================= -->
+  <div id="modal-trial-info" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="trial-info-title">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 flex flex-col shadow-2xl border border-slate-200 relative fade-in">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 id="trial-info-title" class="text-base font-bold text-slate-900">Seu Teste Gratuito de 24 Horas</h3>
+            <p class="text-xs text-slate-500">Transparência total e sem cobrança surpresa.</p>
+          </div>
+        </div>
+        <button onclick="window.app.closeModal('modal-trial-info')" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-3.5 text-xs text-slate-600">
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-500">Tempo Restante de Teste:</span>
+            <strong id="trial-info-remaining" class="text-emerald-700 font-mono text-sm">--</strong>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-500">Término do Acesso Gratuito:</span>
+            <span id="trial-info-expires" class="font-medium text-slate-800">--</span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800">Garantias do Teste:</h4>
+          <p class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+            <span><strong>Zero cobrança automática:</strong> Não solicitamos cartão para iniciar. Seu teste nunca se transformará em cobrança sem sua autorização.</span>
+          </p>
+          <p class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+            <span><strong>Seus dados permanecem seguros:</strong> Após o período de 24h, seus documentos e histórico continuam salvos e protegidos no sistema.</span>
+          </p>
+          <p class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+            <span><strong>Oferta Única de Pré-Lançamento:</strong> Plano Vitalício por apenas <strong>R$ 19,90</strong> em pagamento único pelo checkout oficial Kiwify (PIX instantâneo ou Cartão).</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-end gap-2.5">
+        <button onclick="window.app.closeModal('modal-trial-info')" class="w-full sm:w-auto px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs">
+          Continuar Testando
+        </button>
+        <a href="https://pay.kiwify.com.br/ueLjXAd" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-sm flex items-center justify-center gap-1.5 transition">
+          <i data-lucide="shield-check" class="w-4 h-4"></i> Ativar Vitalício por R$ 19,90 (Kiwify)
+        </a>
       </div>
     </div>
   </div>
